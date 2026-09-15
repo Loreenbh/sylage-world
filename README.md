@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./images/portfolio-planche.png" width="100%" />
+<img src="./images/sylage-world-planche.png" width="100%" />
 
 <br><br>
 
