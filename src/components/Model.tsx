@@ -159,21 +159,21 @@ export default function Model({
     setObjectHighlight(
       bookMeshes,
       hoveredObject === "book",
-      "#ff0000",
+      "#806054",
       originalColors.current
     );
 
     setObjectHighlight(
       cardMeshes,
       hoveredObject === "card",
-      "#ff0000",
+      "#806054",
       originalColors.current
     );
 
     setObjectHighlight(
       contactMeshes,
       hoveredObject === "contact",
-      "#ff0000",
+      "#806054",
       originalColors.current
     );
 

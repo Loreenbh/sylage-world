@@ -14,7 +14,7 @@ export default function Intro({
   useEffect(() => {
     const timer = setTimeout(() => {
       setClosing(true);
-    }, 1500);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);
@@ -24,7 +24,7 @@ export default function Intro({
 
     const timer = setTimeout(() => {
       onFinish();
-    }, 1200);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [closing, onFinish]);
@@ -46,7 +46,7 @@ export default function Intro({
         opacity: closing ? 0 : 1,
 
         transition:
-          "opacity 1.2s cubic-bezier(0.65, 0, 0.35, 1)",
+          "opacity 0.5s cubic-bezier(0.65, 0, 0.35, 1)",
       }}
     >
       <div
@@ -60,7 +60,7 @@ export default function Intro({
             : "translateY(0)",
 
           transition:
-            "transform 1.2s cubic-bezier(0.65, 0, 0.35, 1)",
+            "transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)",
         }}
       >
         {/* BHL */}

@@ -36,7 +36,7 @@ export default function Lighting({
         progress *
         (3 - 2 * progress);
 
-      setLightIntensity(eased * 4);
+      setLightIntensity(eased * 2.5);
 
       if (progress < 1) {
         animationFrame =
@@ -55,25 +55,44 @@ export default function Lighting({
   return (
     <>
       {/* Lumière générale */}
-
-      <ambientLight intensity={0.15} />
-
-      {/* Lumière d'ambiance */}
-
-      <hemisphereLight intensity={0.2} />
-
-      {/* Lumière principale */}
-
-      <directionalLight
-        position={[0, 10, 3]}
-        intensity={lightIntensity}
+      <ambientLight
+        intensity={0.12}
+        color="#f5eee5"
       />
 
-      {/* Lumière de remplissage */}
+      {/* Ambiance chaude très légère */}
+      <hemisphereLight
+        intensity={0.18}
+        color="#fff1dc"
+        groundColor="#3a2922"
+      />
 
+      {/* Lumière principale — coucher de soleil */}
       <directionalLight
-        position={[-4, 5, -2]}
-        intensity={0.5}
+        position={[6, 5, -2]}
+        intensity={lightIntensity}
+        color="#e8a878"
+      />
+
+      {/* Lumière secondaire — rose / mauve */}
+      <directionalLight
+        position={[-5, 6, 1]}
+        intensity={0.45}
+        color="#c9a7b8"
+      />
+
+      {/* Lumière neutre — équilibre les tons */}
+      <directionalLight
+        position={[0, 8, 5]}
+        intensity={0.35}
+        color="#e8e1d8"
+      />
+
+      {/* Petit remplissage froid */}
+      <directionalLight
+        position={[-3, 3, -4]}
+        intensity={0.18}
+        color="#aeb8c5"
       />
     </>
   );
