@@ -70,7 +70,7 @@ export default function Scene() {
       selectedObject === "book"
     ) {
       window.location.href =
-        "https://sylage-trendbook.vercel.app";
+        "https://sylage-archive.vercel.app";
 
       return;
     }

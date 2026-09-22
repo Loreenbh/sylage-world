@@ -8,7 +8,7 @@ S Y L A G E · W O R L D
 
 <br>
 
-<a href="TON-LIEN-VERCEL">→</a>
+<a href="https://sylage-world.vercel.app/">→</a>
 
 </div>
 
@@ -30,7 +30,7 @@ A digital space where the different projects, experiments, and visual identities
 ## 0 3 — S E T U P
 
 ```bash
-git clone https://github.com/Loreenbh/portfolio.git
+git clone https://github.com/Loreenbh/sylage-world
 cd portfolio
 npm install
 npm run dev
