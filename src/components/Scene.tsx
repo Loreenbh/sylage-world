@@ -33,18 +33,13 @@ export default function Scene() {
     setIntroFinished,
   ] = useState(false);
 
-  /*
-   * Objet sélectionné au premier clic.
-   */
+
   const [
     selectedObject,
     setSelectedObject,
   ] = useState<SelectedObject>(null);
 
-  /*
-   * Est-ce qu'on est sur la caméra
-   * rapprochée ?
-   */
+
   const [
     cameraOnPortfolioView,
     setCameraOnPortfolioView,
@@ -56,15 +51,8 @@ export default function Scene() {
     setContactOpen,
   ] = useState(false);
 
-  /*
-   * BOOK
-   */
+
   const handleBookClick = () => {
-    /*
-     * Si on est déjà sur la vue rapprochée
-     * ET que Book était l'objet sélectionné,
-     * c'est le deuxième clic.
-     */
     if (
       cameraOnPortfolioView &&
       selectedObject === "book"
@@ -75,20 +63,11 @@ export default function Scene() {
       return;
     }
 
-    /*
-     * Premier clic.
-     *
-     * On mémorise Book puis on va
-     * vers la caméra commune.
-     */
     setSelectedObject("book");
 
     cameraRef.current?.goToPortfolioView();
   };
 
-  /*
-   * CONTACT
-   */
     const handleContactClick = () => {
       if (
         cameraOnPortfolioView &&
@@ -103,14 +82,7 @@ export default function Scene() {
       cameraRef.current?.goToPortfolioView();
     };
 
-  /*
-   * CARD
-   */
   const handleCardClick = () => {
-    /*
-     * Deuxième clic sur Card :
-     * retour à la vue principale.
-     */
     if (
       cameraOnPortfolioView &&
       selectedObject === "card"
@@ -120,27 +92,15 @@ export default function Scene() {
       return;
     }
 
-    /*
-     * Premier clic :
-     * exactement la même caméra que
-     * Book et Contact.
-     */
     setSelectedObject("card");
 
     cameraRef.current?.goToPortfolioView();
   };
 
-  /*
-   * La caméra vient d'arriver
-   * sur la vue rapprochée.
-   */
   const handlePortfolioReached = () => {
     setCameraOnPortfolioView(true);
   };
 
-  /*
-   * Retour à la vue principale.
-   */
   const handleHomeReached = () => {
     setCameraOnPortfolioView(false);
     setSelectedObject(null);

@@ -15,7 +15,6 @@ export async function POST(request: Request) {
       message,
     } = body;
 
-    // Vérification des types
     if (
       typeof name !== "string" ||
       typeof email !== "string" ||
@@ -30,12 +29,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // Nettoyage
     const cleanName = name.trim();
     const cleanEmail = email.trim();
     const cleanMessage = message.trim();
 
-    // Champs obligatoires
     if (
       !cleanName ||
       !cleanEmail ||
@@ -51,7 +48,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Limites
     if (cleanName.length > 100) {
       return NextResponse.json(
         {
@@ -82,7 +78,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Vérification simple de l'email
     const emailRegex =
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

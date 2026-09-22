@@ -6,15 +6,13 @@ interface IntroProps {
   onFinish: () => void;
 }
 
-export default function Intro({
-  onFinish,
-}: IntroProps) {
+export default function Intro({ onFinish }: IntroProps) {
   const [closing, setClosing] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setClosing(true);
-    }, 500);
+    }, 1200);
 
     return () => clearTimeout(timer);
   }, []);
@@ -24,7 +22,7 @@ export default function Intro({
 
     const timer = setTimeout(() => {
       onFinish();
-    }, 500);
+    }, 1400);
 
     return () => clearTimeout(timer);
   }, [closing, onFinish]);
@@ -35,7 +33,7 @@ export default function Intro({
         position: "fixed",
         inset: 0,
         zIndex: 9999,
-        background: "#141313",
+        background: "#211C19",
 
         display: "flex",
         alignItems: "center",
@@ -46,85 +44,92 @@ export default function Intro({
         opacity: closing ? 0 : 1,
 
         transition:
-          "opacity 0.5s cubic-bezier(0.65, 0, 0.35, 1)",
+          "opacity 1.4s cubic-bezier(0.65, 0, 0.35, 1)",
       }}
     >
       <div
         style={{
+          position: "relative",
+
+          width: "min(90vw, 850px)",
+          aspectRatio: "1 / 0.45",
+
           display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
+          alignItems: "center",
+          justifyContent: "center",
 
           transform: closing
             ? "translateY(-5px)"
             : "translateY(0)",
 
           transition:
-            "transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)",
+            "transform 1.4s cubic-bezier(0.65, 0, 0.35, 1)",
         }}
       >
-        {/* BHL */}
-
-        {/* <div
-          className="
-            text-[100px]
-            sm:text-[180px]
-            lg:text-[300px]
-
-            ml-[20px]
-            sm:ml-[50px]
-            lg:ml-[100px]
-          "
-          style={{
-            fontFamily: "'Bodoni Moda', serif",
-            lineHeight: 0.8,
-            letterSpacing: "0.32em",
-            fontWeight: 200,
-            color: "#e4e3d0",
-            whiteSpace: "nowrap",
-          }}
-        >
-          BHL
-        </div> */}
-        {/* LOGO BHL */}
         <img
-        src="/logo.png"
-        alt="BHL"
-        className="
-            w-[180px]
-            sm:w-[280px]
-            lg:w-[420px]
+          src="/sylage-icon.svg"
+          alt=""
+          style={{
+            position: "absolute",
 
-            ml-[20px]
-            sm:ml-[50px]
-            lg:ml-[100px]
+            width: "clamp(220px, 65vw, 740px)",
+            height: "clamp(220px, 65vw, 740px)",
 
-            object-contain
-        "
+            objectFit: "contain",
+
+            opacity: 0.07,
+
+            zIndex: 0,
+
+            pointerEvents: "none",
+          }}
         />
 
-        {/* PORTFOLIO */}
-
         <div
-          className="
-            text-[14px]
-            sm:text-[20px]
-            lg:text-[30px]
-
-            translate-x-[150px]
-            sm:translate-x-[230px]
-            lg:translate-x-[450px]
-          "
           style={{
-            fontFamily: "Roboto, sans-serif",
-            letterSpacing: "0.35em",
-            fontWeight: 300,
-            color: "#fff",
-            marginTop: "24px",
-            whiteSpace: "nowrap",
+            position: "relative",
+            zIndex: 1,
+
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
           }}
         >
-          PORTFOLIO
+
+          <img
+            src="/sylage-wordmark.png"
+            alt="SYLAGE"
+            style={{
+              width: "clamp(200px, 52vw, 550px)",
+              height: "auto",
+
+              objectFit: "contain",
+
+              display: "block",
+            }}
+          />
+
+          <div
+            style={{
+              marginTop: "10px",
+
+              fontFamily: "Roboto, sans-serif",
+              fontSize: "clamp(11px, 1.5vw, 18px)",
+              fontWeight: 300,
+
+              letterSpacing: "0.48em",
+
+              color: "#EAE3D8",
+
+              paddingRight: "2px",
+
+              transform: "translateX(5px)",
+
+              whiteSpace: "nowrap",
+            }}
+          >
+            WORLD
+          </div>
         </div>
       </div>
     </div>

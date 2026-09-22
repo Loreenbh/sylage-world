@@ -89,7 +89,6 @@ export default function ContactPanel({
           sm:py-16
         "
       >
-        {/* TEXTURE */}
         <div
           className="
             pointer-events-none
@@ -114,7 +113,6 @@ export default function ContactPanel({
           }}
         />
 
-        {/* CLOSE */}
         <button
           type="button"
           onClick={onClose}
@@ -138,9 +136,7 @@ export default function ContactPanel({
           ×
         </button>
 
-        {/* CONTENT */}
         <div className="relative z-10">
-          {/* TITLE */}
           <div className="mb-14">
             <h1
               className="
@@ -157,12 +153,10 @@ export default function ContactPanel({
             <div className="mt-5 h-px w-full bg-[#141313]/20" />
           </div>
 
-          {/* FORM */}
           <form
             onSubmit={handleSubmit}
             className="space-y-9"
           >
-            {/* NAME */}
             <div>
               <label
                 htmlFor="name"
@@ -200,7 +194,6 @@ export default function ContactPanel({
               />
             </div>
 
-            {/* EMAIL */}
             <div>
               <label
                 htmlFor="email"
@@ -238,7 +231,6 @@ export default function ContactPanel({
               />
             </div>
 
-            {/* MESSAGE */}
             <div>
               <label
                 htmlFor="message"
@@ -276,7 +268,6 @@ export default function ContactPanel({
               />
             </div>
 
-            {/* SEND */}
             <div className="pt-3">
                 <button
                 type="submit"
@@ -299,7 +290,6 @@ export default function ContactPanel({
             </div>
           </form>
 
-          {/* LINKS */}
           <div
             className="
               mt-16
@@ -316,19 +306,6 @@ export default function ContactPanel({
                 gap-y-4
               "
             >
-              {/* <a
-                href="mailto:loreen_bh@hotmail.fr"
-                className="
-                  text-[10px]
-                  tracking-[0.2em]
-                  transition-opacity
-                  duration-300
-                  hover:opacity-50
-                "
-              >
-                EMAIL
-              </a> */}
-
               <a
                 href="https://linkedin.com/in/loreen-begliomini-hazan"
                 target="_blank"

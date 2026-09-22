@@ -9,16 +9,13 @@ interface LightingProps {
 export default function Lighting({
   enabled,
 }: LightingProps) {
-  const [lightIntensity, setLightIntensity] =
-    useState(0);
+  const [lightIntensity, setLightIntensity] = useState(0);
 
   useEffect(() => {
     if (!enabled) return;
 
     let startTime: number | null = null;
-
     const duration = 4000;
-
     let animationFrame: number;
 
     const animate = (currentTime: number) => {
@@ -32,20 +29,16 @@ export default function Lighting({
       );
 
       const eased =
-        progress *
-        progress *
-        (3 - 2 * progress);
+        progress * progress * (3 - 2 * progress);
 
-      setLightIntensity(eased * 2.5);
+      setLightIntensity(eased * 2.85);
 
       if (progress < 1) {
-        animationFrame =
-          requestAnimationFrame(animate);
+        animationFrame = requestAnimationFrame(animate);
       }
     };
 
-    animationFrame =
-      requestAnimationFrame(animate);
+    animationFrame = requestAnimationFrame(animate);
 
     return () => {
       cancelAnimationFrame(animationFrame);
@@ -54,45 +47,33 @@ export default function Lighting({
 
   return (
     <>
-      {/* Lumière générale */}
       <ambientLight
-        intensity={0.12}
-        color="#f5eee5"
+        intensity={0.16}
+        color="#eee9e2"
       />
 
-      {/* Ambiance chaude très légère */}
-      <hemisphereLight
-        intensity={0.18}
-        color="#fff1dc"
-        groundColor="#3a2922"
-      />
-
-      {/* Lumière principale — coucher de soleil */}
       <directionalLight
-        position={[6, 5, -2]}
+        position={[5, 6, 2]}
         intensity={lightIntensity}
-        color="#e8a878"
+        color="#ee9b6d"
       />
 
-      {/* Lumière secondaire — rose / mauve */}
       <directionalLight
-        position={[-5, 6, 1]}
-        intensity={0.45}
-        color="#c9a7b8"
+        position={[-2, 5, 1]}
+        intensity={0.38}
+        color="#c9a4b8"
       />
 
-      {/* Lumière neutre — équilibre les tons */}
+      <directionalLight
+        position={[3, 4, -4]}
+        intensity={0.45}
+        color="#9aafc7"
+      />
+
       <directionalLight
         position={[0, 8, 5]}
-        intensity={0.35}
-        color="#e8e1d8"
-      />
-
-      {/* Petit remplissage froid */}
-      <directionalLight
-        position={[-3, 3, -4]}
-        intensity={0.18}
-        color="#aeb8c5"
+        intensity={0.26}
+        color="#dedbd5"
       />
     </>
   );

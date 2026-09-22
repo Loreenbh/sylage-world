@@ -49,12 +49,6 @@ export default function Model({
   const hoveredRef =
     useRef<InteractiveObject>(null);
 
-  /*
-   * =========================
-   * OBJETS
-   * =========================
-   */
-
   const book = useMemo(
     () =>
       scene.getObjectByName(
@@ -79,12 +73,6 @@ export default function Model({
     [scene]
   );
 
-  /*
-   * =========================
-   * MESHES
-   * =========================
-   */
-
   const bookMeshes = useMemo(
     () => getObjectMeshes(book),
     [book]
@@ -99,12 +87,6 @@ export default function Model({
     () => getObjectMeshes(contact),
     [contact]
   );
-
-  /*
-   * =========================
-   * COULEURS ORIGINALES
-   * =========================
-   */
 
   const originalColors =
     useRef(
@@ -149,12 +131,6 @@ export default function Model({
     contactMeshes,
   ]);
 
-  /*
-   * =========================
-   * HOVER
-   * =========================
-   */
-
   useEffect(() => {
     setObjectHighlight(
       bookMeshes,
@@ -193,20 +169,12 @@ export default function Model({
     contactMeshes,
   ]);
 
-  /*
-   * =========================
-   * SURVOL
-   * =========================
-   */
 
   const handlePointerMove = (
     e: any
   ) => {
     const object = e.object;
 
-    /*
-     * BOOK
-     */
     if (
       belongsToObject(
         object,
@@ -226,9 +194,6 @@ export default function Model({
       return;
     }
 
-    /*
-     * CARD
-     */
     if (
       belongsToObject(
         object,
@@ -248,9 +213,6 @@ export default function Model({
       return;
     }
 
-    /*
-     * CONTACT / ENVELOPPE
-     */
     if (
       belongsToObject(
         object,
@@ -270,9 +232,6 @@ export default function Model({
       return;
     }
 
-    /*
-     * Aucun objet interactif
-     */
     if (
       hoveredRef.current !== null
     ) {
@@ -280,12 +239,6 @@ export default function Model({
       setHoveredObject(null);
     }
   };
-
-  /*
-   * =========================
-   * SORTIE DU SURVOL
-   * =========================
-   */
 
   const handlePointerOut = (
     e: any
@@ -296,20 +249,11 @@ export default function Model({
     setHoveredObject(null);
   };
 
-  /*
-   * =========================
-   * CLIC
-   * =========================
-   */
-
   const handleClick = (
     e: any
   ) => {
     const object = e.object;
 
-    /*
-     * BOOK
-     */
     if (
       belongsToObject(
         object,
@@ -323,9 +267,6 @@ export default function Model({
       return;
     }
 
-    /*
-     * CARD
-     */
     if (
       belongsToObject(
         object,
@@ -339,9 +280,6 @@ export default function Model({
       return;
     }
 
-    /*
-     * CONTACT
-     */
     if (
       belongsToObject(
         object,
@@ -355,12 +293,6 @@ export default function Model({
       return;
     }
   };
-
-  /*
-   * =========================
-   * SCÈNE
-   * =========================
-   */
 
   return (
     <primitive

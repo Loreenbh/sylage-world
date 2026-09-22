@@ -55,7 +55,6 @@ export function setObjectHighlight(
 
       if (!mat.color) return;
 
-      // Sauvegarde de la couleur originale
       let original =
         originalColors.get(mat);
 
@@ -64,17 +63,15 @@ export function setObjectHighlight(
         originalColors.set(mat, original);
       }
 
-      // Couleur originale toujours conservée
       mat.color.copy(original);
 
-      // Vraie émission
       if ("emissive" in mat) {
         mat.emissive.set(
           hovered ? hoverColor : "#000000"
         );
 
         mat.emissiveIntensity =
-          hovered ? 0.35 : 0;
+          hovered ? 0.45 : 0;
       }
 
       mat.needsUpdate = true;

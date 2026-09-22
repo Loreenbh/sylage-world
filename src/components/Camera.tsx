@@ -22,9 +22,7 @@ interface CameraControllerProps {
   onHomeReached?: () => void;
 }
 
-/* =========================================================
-   CAMERA — DESKTOP
-   ========================================================= */
+/*CAMERA — DESKTOP*/
 
 const DESKTOP_HOME_POSITION =
   new THREE.Vector3(
@@ -54,10 +52,7 @@ const DESKTOP_PORTFOLIO_TARGET =
     3.043874350362472
   );
 
-/* =========================================================
-   CAMERA — IPHONE SE
-   < 600px
-   ========================================================= */
+/*CAMERA — IPHONE SE < 600px*/
 
 const MOBILE_HOME_POSITION =
   new THREE.Vector3(
@@ -87,10 +82,7 @@ const MOBILE_PORTFOLIO_TARGET =
     6.453186270096136
   );
 
-/* =========================================================
-   CAMERA — IPAD MINI
-   600px → 1024px
-   ========================================================= */
+/*CAMERA — IPAD MINI 600px → 1024px*/
 
 const TABLET_HOME_POSITION =
   new THREE.Vector3(
@@ -106,25 +98,18 @@ const TABLET_HOME_TARGET =
     7.165423153835335
   );
 
-// Même cadrage que mobile pour Portfolio View
 const TABLET_PORTFOLIO_POSITION =
   MOBILE_PORTFOLIO_POSITION.clone();
 
 const TABLET_PORTFOLIO_TARGET =
   MOBILE_PORTFOLIO_TARGET.clone();
 
-/* ========================================================= */
 
 const ANIMATION_DURATION = 1000;
-
-/* =========================================================
-   RESPONSIVE CAMERA
-   ========================================================= */
 
 function getCameraSettings() {
   const width = window.innerWidth;
 
-  // 📱 iPhone / petits mobiles
   if (width < 600) {
     return {
       homePosition: MOBILE_HOME_POSITION,
@@ -137,7 +122,6 @@ function getCameraSettings() {
     };
   }
 
-  // 📱 Tablettes
   if (width <= 1024) {
     return {
       homePosition: TABLET_HOME_POSITION,
@@ -150,7 +134,6 @@ function getCameraSettings() {
     };
   }
 
-  // 🖥️ Desktop
   return {
     homePosition: DESKTOP_HOME_POSITION,
     homeTarget: DESKTOP_HOME_TARGET,
@@ -161,8 +144,6 @@ function getCameraSettings() {
       DESKTOP_PORTFOLIO_TARGET,
   };
 }
-
-/* ========================================================= */
 
 const CameraController = forwardRef<
   CameraControllerHandle,
@@ -180,9 +161,6 @@ const CameraController = forwardRef<
   const animationRef =
     useRef<number | null>(null);
 
-  /* =======================================================
-     ANIMATION
-     ======================================================= */
 
   const animateTo = (
     position: THREE.Vector3,
@@ -263,10 +241,6 @@ const CameraController = forwardRef<
       requestAnimationFrame(animate);
   };
 
-  /* =======================================================
-     PUBLIC CAMERA CONTROLLER
-     ======================================================= */
-
   useImperativeHandle(
     ref,
     () => ({
@@ -302,10 +276,6 @@ const CameraController = forwardRef<
     ]
   );
 
-  /* =======================================================
-     INITIAL CAMERA
-     ======================================================= */
-
   useEffect(() => {
     const controls =
       controlsRef.current;
@@ -328,12 +298,8 @@ const CameraController = forwardRef<
     );
   }, []);
 
-  /* =======================================================
-     TEMPORAIRE — KEYBOARD CAMERA CONTROLS
-     À SUPPRIMER PLUS TARD SI TU NE VEUX PAS QUE
-     LE VISITEUR PUISSE BOUGER LA CAMÉRA AU CLAVIER.
-     ======================================================= */
-
+  /* 
+     TEMPORAIRE KEYBOARD CAMERA CONTROLSA SUPP + TARD POUR MOUVEMENT CAMERA FIXE*/
   useEffect(() => {
     const handleKeyDown = (
       event: KeyboardEvent
@@ -407,10 +373,7 @@ const CameraController = forwardRef<
     };
   }, []);
 
-  /* =======================================================
-     TEMPORAIRE — DEBUG COORDONNÉES CAMÉRA
-     À SUPPRIMER UNE FOIS LES CADRAGES VALIDÉS.
-     ======================================================= */
+  /*TEMPORAIRE DEBUG COORDONNEES CAMERAA SUPP + TARD APRES CADRAGE CAMERA*/
 
   useEffect(() => {
     const controls =
@@ -451,7 +414,7 @@ const CameraController = forwardRef<
         targetChanged
       ) {
         console.log(
-          "📷 CAMERA POSITION:",
+          "CAMERA POSITION:",
           {
             x: position.x,
             y: position.y,
@@ -460,7 +423,7 @@ const CameraController = forwardRef<
         );
 
         console.log(
-          "🎯 CAMERA TARGET:",
+          "CAMERA TARGET:",
           {
             x: target.x,
             y: target.y,
@@ -498,8 +461,6 @@ const CameraController = forwardRef<
       }
     };
   }, []);
-
-  /* ======================================================= */
 
   return (
     <CameraControls
