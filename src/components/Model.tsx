@@ -12,6 +12,7 @@ import * as THREE from "three";
 
 import {
   belongsToObject,
+  DetectedInteractiveObject,
   getObjectMeshes,
   setObjectHighlight,
 } from "./interactive/InteractiveObject";
@@ -24,6 +25,9 @@ interface ModelProps {
   onBookClick?: () => void;
   onCardClick?: () => void;
   onContactClick?: () => void;
+  onInteractiveObjectsChange?: (
+    objects: DetectedInteractiveObject[]
+  ) => void;
 }
 
 type InteractiveObject =
@@ -36,6 +40,7 @@ export default function Model({
   onBookClick,
   onCardClick,
   onContactClick,
+  onInteractiveObjectsChange,
 }: ModelProps) {
   const { scene } = useGLTF(
     "/models/env.glb"
@@ -72,6 +77,42 @@ export default function Model({
       ),
     [scene]
   );
+
+  const interactiveObjects = useMemo(() => {
+    const objects = new Map<string, THREE.Object3D>();
+
+    const knownObjects: Array<
+      [string, THREE.Object3D | undefined]
+    > = [
+      ["book", book],
+      ["card", card],
+      ["contact", contact],
+    ];
+
+    knownObjects.forEach(([name, object]) => {
+      if (object) {
+        objects.set(name, object);
+      }
+    });
+
+    scene.traverse((object) => {
+      if (
+        object.userData.interactive === true &&
+        !objects.has(object.name)
+      ) {
+        objects.set(object.name, object);
+      }
+    });
+
+    return Array.from(objects, ([name, object]) => ({
+      name,
+      object,
+    }));
+  }, [book, card, contact, scene]);
+
+  useEffect(() => {
+    onInteractiveObjectsChange?.(interactiveObjects);
+  }, [interactiveObjects, onInteractiveObjectsChange]);
 
   const bookMeshes = useMemo(
     () => getObjectMeshes(book),

@@ -5,12 +5,14 @@ import { Canvas } from "@react-three/fiber";
 import {
   useRef,
   useState,
+  useCallback,
 } from "react";
 
 import Intro from "./Intro";
 import Lighting from "./Light";
 import Model from "./Model";
 import ContactPanel from "./ContactPanel";
+import { DetectedInteractiveObject } from "./interactive/InteractiveObject";
 
 import CameraController, {
   CameraControllerHandle,
@@ -51,6 +53,27 @@ export default function Scene() {
     setContactOpen,
   ] = useState(false);
 
+    const [
+      interactiveObjects,
+      setInteractiveObjects,
+    ] = useState<DetectedInteractiveObject[]>([]);
+
+    const [
+      sweepTrigger,
+      setSweepTrigger,
+    ] = useState(0);
+
+    const [
+      initialLightingComplete,
+      setInitialLightingComplete,
+    ] = useState(false);
+
+    const handleInteractiveObjectsChange = useCallback(
+      (objects: DetectedInteractiveObject[]) => {
+        setInteractiveObjects(objects);
+      },
+      []
+    );
 
   const handleBookClick = () => {
     if (
@@ -99,7 +122,18 @@ export default function Scene() {
 
   const handlePortfolioReached = () => {
     setCameraOnPortfolioView(true);
+
+    if (initialLightingComplete) {
+      setSweepTrigger((trigger) => trigger + 1);
+    }
   };
+
+  const handleInitialLightingComplete = useCallback(() => {
+    setInitialLightingComplete(true);
+    setSweepTrigger((trigger) =>
+      trigger === 0 ? 1 : trigger
+    );
+  }, []);
 
   const handleHomeReached = () => {
     setCameraOnPortfolioView(false);
@@ -145,12 +179,20 @@ export default function Scene() {
 
         <Lighting
           enabled={introFinished}
+          interactiveObjects={interactiveObjects}
+          sweepTrigger={sweepTrigger}
+          onInitialLightingComplete={
+            handleInitialLightingComplete
+          }
         />
 
         <Model
           onBookClick={handleBookClick}
           onCardClick={handleCardClick}
           onContactClick={handleContactClick}
+          onInteractiveObjectsChange={
+            handleInteractiveObjectsChange
+          }
         />
       </Canvas>
     </>
