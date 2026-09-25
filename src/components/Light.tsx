@@ -212,247 +212,201 @@ export default function Lighting({
    */
 
   useEffect(() => {
-    if (
-      !enabled ||
-      sweepTrigger === 0 ||
-      overlaysRef.current.length === 0
-    ) {
-      return;
+  if (
+    !enabled ||
+    sweepTrigger === 0 ||
+    overlaysRef.current.length === 0
+  ) {
+    return;
+  }
+
+  const overlays = overlaysRef.current;
+
+  /*
+   * Lumière douce.
+   * Beaucoup moins blanche / flash.
+   */
+  const flashOpacity = 0.16;
+
+  /*
+   * Chaque objet s'allume l'un après l'autre.
+   */
+  const delayBetweenObjects = 900;
+
+  /*
+   * Progression de la lumière sur chaque objet.
+   */
+  const fadeInDuration = 1000;
+  const holdDuration = 500;
+  const fadeOutDuration = 1800;
+
+  const objectDuration =
+    fadeInDuration +
+    holdDuration +
+    fadeOutDuration;
+
+  const totalDuration =
+    (overlays.length - 1) *
+      delayBetweenObjects +
+    objectDuration;
+
+  const startTime = performance.now();
+
+  let animationFrame: number;
+
+  const smoothstep = (value: number) => {
+    const x = Math.max(
+      0,
+      Math.min(1, value)
+    );
+
+    return x * x * (3 - 2 * x);
+  };
+
+  const animate = (currentTime: number) => {
+    const elapsed =
+      currentTime - startTime;
+
+    overlays.forEach(
+      (overlay, index) => {
+        const material =
+          overlay.material as THREE.MeshBasicMaterial;
+
+        /*
+         * Chaque objet commence
+         * après le précédent.
+         */
+        const objectElapsed =
+          elapsed -
+          index * delayBetweenObjects;
+
+        let opacity = 0;
+
+        /*
+         * FADE-IN
+         */
+        if (
+          objectElapsed >= 0 &&
+          objectElapsed < fadeInDuration
+        ) {
+          const progress =
+            objectElapsed /
+            fadeInDuration;
+
+          opacity =
+            smoothstep(progress) *
+            flashOpacity;
+        }
+
+        /*
+         * MAINTIEN
+         */
+        else if (
+          objectElapsed >= fadeInDuration &&
+          objectElapsed <
+            fadeInDuration +
+              holdDuration
+        ) {
+          opacity = flashOpacity;
+        }
+
+        /*
+         * FADE-OUT
+         */
+        else if (
+          objectElapsed >=
+            fadeInDuration +
+              holdDuration &&
+          objectElapsed <
+            objectDuration
+        ) {
+          const progress =
+            (objectElapsed -
+              fadeInDuration -
+              holdDuration) /
+            fadeOutDuration;
+
+          opacity =
+            (1 - smoothstep(progress)) *
+            flashOpacity;
+        }
+
+        material.opacity = opacity;
+      }
+    );
+
+    if (elapsed < totalDuration) {
+      animationFrame =
+        requestAnimationFrame(animate);
+    } else {
+      overlays.forEach((overlay) => {
+        const material =
+          overlay.material as THREE.MeshBasicMaterial;
+
+        material.opacity = 0;
+      });
     }
+  };
 
-    const overlays =
-      overlaysRef.current;
+  animationFrame =
+    requestAnimationFrame(animate);
 
-    /*
-     * ─────────────────────────
-     * PARAMÈTRES
-     * ─────────────────────────
-     */
+  return () => {
+    cancelAnimationFrame(animationFrame);
 
-    const flashOpacity = 0.40;
+    overlays.forEach((overlay) => {
+      const material =
+        overlay.material as THREE.MeshBasicMaterial;
 
-    /*
-     * Temps pour atteindre
-     * progressivement la luminosité maximale.
-     */
-
-    const fadeInDuration = 1800;
-
-    /*
-     * Temps à luminosité maximale.
-     */
-
-    const holdDuration = 600;
-
-    /*
-     * Temps pour disparaître
-     * progressivement.
-     */
-
-    const fadeOutDuration = 3000;
-
-    const totalDuration =
-      fadeInDuration +
-      holdDuration +
-      fadeOutDuration;
-
-    /*
-     * ─────────────────────────
-     * DÉPART COMMUN
-     * ─────────────────────────
-     */
-
-    const startTime =
-      performance.now();
-
-    let animationFrame: number;
-
-    /*
-     * Courbe douce.
-     */
-
-    const smoothstep = (
-      value: number
-    ) => {
-      const x = Math.max(
-        0,
-        Math.min(1, value)
-      );
-
-      return (
-        x *
-        x *
-        (3 - 2 * x)
-      );
-    };
-
-    /*
-     * ─────────────────────────
-     * ANIMATION COMMUNE
-     * ─────────────────────────
-     */
-
-    const animate = (
-      currentTime: number
-    ) => {
-      const elapsed =
-        currentTime - startTime;
-
-      let opacity = 0;
-
-      /*
-       * FADE-IN
-       *
-       * 0 → 0.40
-       */
-
-      if (
-        elapsed <
-        fadeInDuration
-      ) {
-        const progress =
-          elapsed /
-          fadeInDuration;
-
-        opacity =
-          smoothstep(progress) *
-          flashOpacity;
-      }
-
-      /*
-       * HOLD
-       *
-       * 0.40
-       */
-
-      else if (
-        elapsed <
-        fadeInDuration +
-          holdDuration
-      ) {
-        opacity =
-          flashOpacity;
-      }
-
-      /*
-       * FADE-OUT
-       *
-       * 0.40 → 0
-       */
-
-      else if (
-        elapsed <
-        totalDuration
-      ) {
-        const progress =
-          (elapsed -
-            fadeInDuration -
-            holdDuration) /
-          fadeOutDuration;
-
-        opacity =
-          (1 -
-            smoothstep(progress)) *
-          flashOpacity;
-      }
-
-      /*
-       * EXACTEMENT LA MÊME OPACITÉ
-       * POUR TOUS LES OBJETS.
-       */
-
-      overlays.forEach(
-        (overlay) => {
-          const material =
-            overlay.material as THREE.MeshBasicMaterial;
-
-          material.opacity =
-            opacity;
-        }
-      );
-
-      /*
-       * FIN
-       */
-
-      if (
-        elapsed <
-        totalDuration
-      ) {
-        animationFrame =
-          requestAnimationFrame(
-            animate
-          );
-      } else {
-        overlays.forEach(
-          (overlay) => {
-            const material =
-              overlay.material as THREE.MeshBasicMaterial;
-
-            material.opacity = 0;
-          }
-        );
-      }
-    };
-
-    /*
-     * Départ.
-     */
-
-    animationFrame =
-      requestAnimationFrame(
-        animate
-      );
-
-    return () => {
-      cancelAnimationFrame(
-        animationFrame
-      );
-
-      overlays.forEach(
-        (overlay) => {
-          const material =
-            overlay.material as THREE.MeshBasicMaterial;
-
-          material.opacity = 0;
-        }
-      );
-    };
-  }, [
-    enabled,
-    sweepTrigger,
-  ]);
+      material.opacity = 0;
+    });
+  };
+}, [
+  enabled,
+  sweepTrigger,
+]);
 
   return (
     <>
-      <ambientLight
-        intensity={0.16}
-        color="#eee9e2"
-      />
+<ambientLight
+  intensity={0.52}
+  color="#b8b0a8"
+/>
 
-      <directionalLight
-        position={[5, 6, 2]}
-        intensity={lightIntensity}
-        color="#ee9b6d"
-      />
+{/* CHAUD — lumière naturelle de fenêtre */}
+<directionalLight
+  position={[5, 6, 2]}
+  intensity={lightIntensity}
+  color="#b28d77"
+/>
 
-      <directionalLight
-        position={[-2, 5, 1]}
-        intensity={0.38}
-        color="#c9a4b8"
-      />
+{/* CHAUD — diffusion */}
+<directionalLight
+  position={[-2, 5, 1]}
+  intensity={0.72}
+  color="#c0aa97"
+/>
 
-      <directionalLight
-        position={[3, 4, -4]}
-        intensity={0.45}
-        color="#9aafc7"
-      />
+{/* FROID — lumière du ciel */}
+<directionalLight
+  position={[3, 4, -4]}
+  intensity={0.56}
+  color="#9cafbd"
+/>
 
-      <directionalLight
-        position={[0, 8, 5]}
-        intensity={0.26}
-        color="#dedbd5"
-      />
+{/* FROID — remplissage */}
+<directionalLight
+  position={[-4, 3, -3]}
+  intensity={0.44}
+  color="#909da6"
+/>
+
+{/* LUMIÈRE GÉNÉRALE */}
+<directionalLight
+  position={[0, 8, 5]}
+  intensity={0.34}
+  color="#c5b9ab"
+/>
     </>
   );
 }

@@ -9,17 +9,17 @@ interface ContactPanelProps {
 export default function ContactPanel({
   onClose,
 }: ContactPanelProps) {
-    const [status, setStatus] = useState<
+  const [status, setStatus] = useState<
     "idle" | "sending" | "success" | "error"
-    >("idle");
+  >("idle");
 
-   const handleSubmit = async (
+  const handleSubmit = async (
     e: FormEvent<HTMLFormElement>
-    ) => {
+  ) => {
     e.preventDefault();
 
     if (status === "sending") {
-        return;
+      return;
     }
 
     const form = e.currentTarget;
@@ -33,44 +33,44 @@ export default function ContactPanel({
     setStatus("sending");
 
     try {
-        const response = await fetch(
+      const response = await fetch(
         "/api/contact",
         {
-            method: "POST",
-            headers: {
+          method: "POST",
+          headers: {
             "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
+          },
+          body: JSON.stringify({
             name,
             email,
             message,
-            }),
+          }),
         }
-        );
+      );
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (!response.ok || !data.success) {
+      if (!response.ok || !data.success) {
         throw new Error(
-            data.message ||
+          data.message ||
             "Impossible d'envoyer le message."
         );
-        }
+      }
 
-        console.log("Réponse API :", data);
+      console.log("Réponse API :", data);
 
-        form.reset();
+      form.reset();
 
-        setStatus("success");
+      setStatus("success");
     } catch (error) {
-        console.error(
+      console.error(
         "Erreur lors de l'envoi :",
         error
-        );
+      );
 
-        setStatus("error");
+      setStatus("error");
     }
-    };
+  };
 
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-[#141313]/70 px-5 py-8 backdrop-blur-[3px]">
@@ -140,12 +140,16 @@ export default function ContactPanel({
           <div className="mb-14">
             <h1
               className="
-                font-serif
                 text-[42px]
                 font-normal
-                tracking-[0.16em]
+                leading-none
+                tracking-[0.22em]
                 sm:text-[58px]
               "
+              style={{
+                fontFamily:
+                  '"Bodoni Moda SC", serif',
+              }}
             >
               CONTACT
             </h1>
@@ -269,24 +273,24 @@ export default function ContactPanel({
             </div>
 
             <div className="pt-3">
-                <button
+              <button
                 type="submit"
                 disabled={status === "sending"}
                 className="
-                    text-[11px]
-                    tracking-[0.3em]
-                    transition-opacity
-                    duration-300
-                    disabled:cursor-not-allowed
-                    disabled:opacity-40
-                    hover:opacity-50
+                  text-[11px]
+                  tracking-[0.3em]
+                  transition-opacity
+                  duration-300
+                  disabled:cursor-not-allowed
+                  disabled:opacity-40
+                  hover:opacity-50
                 "
-                >
+              >
                 {status === "sending" && "SENDING..."}
                 {status === "success" && "SENT ✓"}
                 {status === "error" && "TRY AGAIN"}
                 {status === "idle" && "SEND →"}
-                </button>
+              </button>
             </div>
           </form>
 
