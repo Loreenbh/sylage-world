@@ -26,76 +26,76 @@ interface CameraControllerProps {
 
 const DESKTOP_HOME_POSITION =
   new THREE.Vector3(
-    -0.9773974442104253,
-    3.464438796329396,
-    -7.4873469882786114
+    -0.06369691066211441,
+    3.6554354764551578,
+    -7.145363508531997
   );
 
 const DESKTOP_HOME_TARGET =
   new THREE.Vector3(
-    -0.011249006092192836,
-    0,
-    8.768357527039273
+    0.0026168764236207858,
+    8.955509944730269e-18,
+    6.624760685021101
   );
 
 const DESKTOP_PORTFOLIO_POSITION =
   new THREE.Vector3(
-    -0.011249006092192836,
-    4.5403447543,
-    0.254550184062472
+    -0.873557826820947,
+    4.033244539201459,
+    -1.481182116804923
   );
 
 const DESKTOP_PORTFOLIO_TARGET =
   new THREE.Vector3(
-    -0.8596972394223994,
-    0,
-    3.043874350362472
+    -1.0337152486782129,
+    2.081668171172169e-18,
+    1.5386196331534792
   );
 
 /*CAMERA — IPHONE SE < 600px*/
 
 const MOBILE_HOME_POSITION =
   new THREE.Vector3(
-    -0.2595821243744352,
-    5.4775850812395515,
-    -10.256428589157547
+   1.9928777364680994,
+    4.840980295306595,
+    -8.269284448865504
   );
 
 const MOBILE_HOME_TARGET =
   new THREE.Vector3(
-    -0.4546230202047738,
-    0,
-    5.464313409681198
+    -2.5198916815317056,
+    9.020562075079397e-18,
+    4.347480124795208
   );
 
 const MOBILE_PORTFOLIO_POSITION =
   new THREE.Vector3(
-    -0.46734027380768045,
-    5.0662657714090695,
-    3.3407667702979267
+    -0.933836224981,
+    6.348982140964651,
+    -1.7615021217060458
   );
 
 const MOBILE_PORTFOLIO_TARGET =
   new THREE.Vector3(
-    -0.5489043277240174,
-    0,
-    6.453186270096136
+    -1.0360512971909748,
+    2.0816681711721684e-18,
+    2.138943830207164
   );
 
 /*CAMERA — IPAD MINI 600px → 1024px*/
 
 const TABLET_HOME_POSITION =
   new THREE.Vector3(
-    -0.18067940994816498,
-    5.4775850812395515,
-    -8.55531884500341
+    -1.8020095703856305,
+    4.280323700538324,
+    -8.762769156758235
   );
 
 const TABLET_HOME_TARGET =
   new THREE.Vector3(
-    -0.37572030577850357,
-    0,
-    7.165423153835335
+    -2.7996252191758915,
+    8.673617379884037e-18,
+    4.789592939299398
   );
 
 const TABLET_PORTFOLIO_POSITION =
@@ -212,7 +212,8 @@ const CameraController = forwardRef<
         startTarget
           .clone()
           .lerp(target, eased);
-
+console.log("SCREEN WIDTH:", window.innerWidth);
+console.log("CAMERA SETTINGS:", getCameraSettings());
       controls.setLookAt(
         currentPosition.x,
         currentPosition.y,
@@ -284,7 +285,8 @@ const CameraController = forwardRef<
 
     const camera =
       getCameraSettings();
-
+console.log("SCREEN WIDTH:", window.innerWidth);
+console.log("CAMERA SETTINGS:", getCameraSettings());
     controls.setLookAt(
       camera.homePosition.x,
       camera.homePosition.y,

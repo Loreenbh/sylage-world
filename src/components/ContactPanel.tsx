@@ -23,7 +23,6 @@ export default function ContactPanel({
     }
 
     const form = e.currentTarget;
-
     const formData = new FormData(form);
 
     const name = formData.get("name");
@@ -33,20 +32,17 @@ export default function ContactPanel({
     setStatus("sending");
 
     try {
-      const response = await fetch(
-        "/api/contact",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name,
-            email,
-            message,
-          }),
-        }
-      );
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+        }),
+      });
 
       const data = await response.json();
 
@@ -75,17 +71,20 @@ export default function ContactPanel({
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-[#141313]/70 px-5 py-8 backdrop-blur-[3px]">
       <div
+        onPointerDown={(e) => e.stopPropagation()}
+        onPointerMove={(e) => e.stopPropagation()}
+        onWheel={(e) => e.stopPropagation()}
         className="
           relative
           w-full
-          max-w-[760px]
+          max-w-[820px]
           overflow-hidden
-          bg-[#e4e3d0]
+          bg-[#DDD6CC]
           px-7
           py-12
           text-[#141313]
           shadow-[0_20px_80px_rgba(0,0,0,0.18)]
-          sm:px-14
+          sm:px-16
           sm:py-16
         "
       >
@@ -138,21 +137,15 @@ export default function ContactPanel({
 
         <div className="relative z-10">
           <div className="mb-14">
-            <h1
+            <img
+              src="/contact.png"
+              alt="CONTACT"
               className="
-                text-[42px]
-                font-normal
-                leading-none
-                tracking-[0.22em]
-                sm:text-[58px]
+                h-auto
+                w-[240px]
+                sm:w-[330px]
               "
-              style={{
-                fontFamily:
-                  '"Bodoni Moda SC", serif',
-              }}
-            >
-              CONTACT
-            </h1>
+            />
 
             <div className="mt-5 h-px w-full bg-[#141313]/20" />
           </div>
@@ -170,6 +163,7 @@ export default function ContactPanel({
                   text-[10px]
                   tracking-[0.25em]
                   opacity-60
+                  sm:text-[12px]
                 "
               >
                 NAME
@@ -194,6 +188,7 @@ export default function ContactPanel({
                   duration-300
                   placeholder:text-[#141313]/30
                   focus:border-[#141313]
+                  sm:text-[17px]
                 "
               />
             </div>
@@ -207,6 +202,7 @@ export default function ContactPanel({
                   text-[10px]
                   tracking-[0.25em]
                   opacity-60
+                  sm:text-[12px]
                 "
               >
                 EMAIL
@@ -231,6 +227,7 @@ export default function ContactPanel({
                   duration-300
                   placeholder:text-[#141313]/30
                   focus:border-[#141313]
+                  sm:text-[17px]
                 "
               />
             </div>
@@ -244,6 +241,7 @@ export default function ContactPanel({
                   text-[10px]
                   tracking-[0.25em]
                   opacity-60
+                  sm:text-[12px]
                 "
               >
                 MESSAGE
@@ -268,6 +266,7 @@ export default function ContactPanel({
                   transition-colors
                   duration-300
                   focus:border-[#141313]
+                  sm:text-[17px]
                 "
               />
             </div>
@@ -284,6 +283,7 @@ export default function ContactPanel({
                   disabled:cursor-not-allowed
                   disabled:opacity-40
                   hover:opacity-50
+                  sm:text-[12px]
                 "
               >
                 {status === "sending" && "SENDING..."}
@@ -299,14 +299,15 @@ export default function ContactPanel({
               mt-16
               border-t
               border-[#141313]/20
-              pt-6
+              pt-7
             "
           >
             <div
               className="
                 flex
                 flex-wrap
-                gap-x-7
+                items-center
+                gap-x-8
                 gap-y-4
               "
             >
@@ -315,7 +316,7 @@ export default function ContactPanel({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
-                  text-[10px]
+                  text-[11px]
                   tracking-[0.2em]
                   transition-opacity
                   duration-300
@@ -325,12 +326,16 @@ export default function ContactPanel({
                 LINKEDIN
               </a>
 
+              <span className="text-[9px] opacity-60">
+                •
+              </span>
+
               <a
                 href="https://github.com/Loreenbh"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
-                  text-[10px]
+                  text-[11px]
                   tracking-[0.2em]
                   transition-opacity
                   duration-300
@@ -340,12 +345,16 @@ export default function ContactPanel({
                 GITHUB
               </a>
 
+              <span className="text-[9px] opacity-60">
+                •
+              </span>
+
               <a
                 href="/cv.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
-                  text-[10px]
+                  text-[11px]
                   tracking-[0.2em]
                   transition-opacity
                   duration-300
@@ -361,3 +370,4 @@ export default function ContactPanel({
     </div>
   );
 }
+
