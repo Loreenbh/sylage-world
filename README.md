@@ -3,9 +3,6 @@
 <img src="./images/sylage-world-planche.png" width="100%" />
 
 <br><br>
-
-S Y L A G E · W O R L D
-
 <br>
 
 <a href="https://sylage-world.vercel.app/">→</a>
