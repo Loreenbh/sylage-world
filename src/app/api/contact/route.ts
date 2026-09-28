@@ -1,19 +1,13 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(
-  process.env.RESEND_API_KEY
-);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const {
-      name,
-      email,
-      message,
-    } = body;
+    const { name, email, message } = body;
 
     if (
       typeof name !== "string" ||
@@ -25,7 +19,7 @@ export async function POST(request: Request) {
           success: false,
           message: "Données invalides.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -33,18 +27,13 @@ export async function POST(request: Request) {
     const cleanEmail = email.trim();
     const cleanMessage = message.trim();
 
-    if (
-      !cleanName ||
-      !cleanEmail ||
-      !cleanMessage
-    ) {
+    if (!cleanName || !cleanEmail || !cleanMessage) {
       return NextResponse.json(
         {
           success: false,
-          message:
-            "Tous les champs sont obligatoires.",
+          message: "Tous les champs sont obligatoires.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -54,7 +43,7 @@ export async function POST(request: Request) {
           success: false,
           message: "Nom trop long.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -64,7 +53,7 @@ export async function POST(request: Request) {
           success: false,
           message: "Email trop long.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -74,12 +63,11 @@ export async function POST(request: Request) {
           success: false,
           message: "Message trop long.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const emailRegex =
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(cleanEmail)) {
       return NextResponse.json(
@@ -87,17 +75,16 @@ export async function POST(request: Request) {
           success: false,
           message: "Adresse email invalide.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const { data, error } =
-      await resend.emails.send({
-        from: "Portfolio <onboarding@resend.dev>",
-        to: [process.env.CONTACT_EMAIL!],
-        replyTo: cleanEmail,
-        subject: `Nouveau message de ${cleanName}`,
-        text: `
+    const { data, error } = await resend.emails.send({
+      from: "Portfolio <onboarding@resend.dev>",
+      to: [process.env.CONTACT_EMAIL!],
+      replyTo: cleanEmail,
+      subject: `Nouveau message de ${cleanName}`,
+      text: `
 Nom : ${cleanName}
 
 Email : ${cleanEmail}
@@ -106,21 +93,17 @@ Message :
 
 ${cleanMessage}
         `,
-      });
+    });
 
     if (error) {
-      console.error(
-        "Erreur Resend :",
-        error
-      );
+      console.error("Erreur Resend :", error);
 
       return NextResponse.json(
         {
           success: false,
-          message:
-            "Impossible d'envoyer le message.",
+          message: "Impossible d'envoyer le message.",
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -130,18 +113,14 @@ ${cleanMessage}
       id: data?.id,
     });
   } catch (error) {
-    console.error(
-      "Erreur API contact :",
-      error
-    );
+    console.error("Erreur API contact :", error);
 
     return NextResponse.json(
       {
         success: false,
-        message:
-          "Une erreur est survenue.",
+        message: "Une erreur est survenue.",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -15,10 +15,7 @@ export interface OriginalEmissive {
 export function setSurfaceHighlight(
   meshes: THREE.Mesh[],
   intensity: number,
-  originalEmissive: Map<
-    THREE.Material,
-    OriginalEmissive
-  >
+  originalEmissive: Map<THREE.Material, OriginalEmissive>,
 ) {
   meshes.forEach((mesh) => {
     const materials = Array.isArray(mesh.material)
@@ -37,7 +34,7 @@ export function setSurfaceHighlight(
         });
       }
 
-      mat.emissive.set("#ffffff");
+      mat.emissive.set("#e4cdaa9b");
       mat.emissiveIntensity = intensity;
       mat.needsUpdate = true;
     });
@@ -45,10 +42,7 @@ export function setSurfaceHighlight(
 }
 
 export function restoreSurfaceHighlight(
-  originalEmissive: Map<
-    THREE.Material,
-    OriginalEmissive
-  >
+  originalEmissive: Map<THREE.Material, OriginalEmissive>,
 ) {
   originalEmissive.forEach((original, material) => {
     const mat = material as THREE.MeshStandardMaterial;
@@ -63,7 +57,7 @@ export function restoreSurfaceHighlight(
 
 export function belongsToObject(
   object: THREE.Object3D | null | undefined,
-  objectName: string
+  objectName: string,
 ): boolean {
   let current = object;
 
@@ -79,7 +73,7 @@ export function belongsToObject(
 }
 
 export function getObjectMeshes(
-  object: THREE.Object3D | null | undefined
+  object: THREE.Object3D | null | undefined,
 ): THREE.Mesh[] {
   if (!object) return [];
 
@@ -98,10 +92,7 @@ export function setObjectHighlight(
   meshes: THREE.Mesh[],
   hovered: boolean,
   hoverColor: string,
-  originalColors: Map<
-    THREE.Material,
-    THREE.Color
-  >
+  originalColors: Map<THREE.Material, THREE.Color>,
 ) {
   meshes.forEach((mesh) => {
     const materials = Array.isArray(mesh.material)
@@ -109,13 +100,11 @@ export function setObjectHighlight(
       : [mesh.material];
 
     materials.forEach((material) => {
-      const mat =
-        material as THREE.MeshStandardMaterial;
+      const mat = material as THREE.MeshStandardMaterial;
 
       if (!mat.color) return;
 
-      let original =
-        originalColors.get(mat);
+      let original = originalColors.get(mat);
 
       if (!original) {
         original = mat.color.clone();
@@ -125,12 +114,9 @@ export function setObjectHighlight(
       mat.color.copy(original);
 
       if ("emissive" in mat) {
-        mat.emissive.set(
-          hovered ? hoverColor : "#000000"
-        );
+        mat.emissive.set(hovered ? hoverColor : "#000000");
 
-        mat.emissiveIntensity =
-          hovered ? 0.45 : 0;
+        mat.emissiveIntensity = hovered ? 0.45 : 0;
       }
 
       mat.needsUpdate = true;

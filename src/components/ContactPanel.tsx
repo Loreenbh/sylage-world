@@ -6,16 +6,12 @@ interface ContactPanelProps {
   onClose: () => void;
 }
 
-export default function ContactPanel({
-  onClose,
-}: ContactPanelProps) {
+export default function ContactPanel({ onClose }: ContactPanelProps) {
   const [status, setStatus] = useState<
     "idle" | "sending" | "success" | "error"
   >("idle");
 
-  const handleSubmit = async (
-    e: FormEvent<HTMLFormElement>
-  ) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (status === "sending") {
@@ -47,10 +43,7 @@ export default function ContactPanel({
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        throw new Error(
-          data.message ||
-            "Impossible d'envoyer le message."
-        );
+        throw new Error(data.message || "Impossible d'envoyer le message.");
       }
 
       console.log("Réponse API :", data);
@@ -59,10 +52,7 @@ export default function ContactPanel({
 
       setStatus("success");
     } catch (error) {
-      console.error(
-        "Erreur lors de l'envoi :",
-        error
-      );
+      console.error("Erreur lors de l'envoi :", error);
 
       setStatus("error");
     }
@@ -79,7 +69,7 @@ export default function ContactPanel({
           w-full
           max-w-[820px]
           overflow-hidden
-          bg-[#DDD6CC]
+          bg-[url('/bg-contact.png')]
           px-7
           py-12
           text-[#141313]
@@ -150,10 +140,7 @@ export default function ContactPanel({
             <div className="mt-5 h-px w-full bg-[#141313]/20" />
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-9"
-          >
+          <form onSubmit={handleSubmit} className="space-y-9">
             <div>
               <label
                 htmlFor="name"
@@ -326,9 +313,7 @@ export default function ContactPanel({
                 LINKEDIN
               </a>
 
-              <span className="text-[9px] opacity-60">
-                •
-              </span>
+              <span className="text-[9px] opacity-60">•</span>
 
               <a
                 href="https://github.com/Loreenbh"
@@ -345,9 +330,7 @@ export default function ContactPanel({
                 GITHUB
               </a>
 
-              <span className="text-[9px] opacity-60">
-                •
-              </span>
+              <span className="text-[9px] opacity-60">•</span>
 
               <a
                 href="/cv.pdf"
@@ -370,4 +353,3 @@ export default function ContactPanel({
     </div>
   );
 }
-

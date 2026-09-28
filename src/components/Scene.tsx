@@ -2,11 +2,7 @@
 
 import { Canvas } from "@react-three/fiber";
 
-import {
-  useRef,
-  useState,
-  useCallback,
-} from "react";
+import { useRef, useState, useCallback } from "react";
 
 import Intro from "./Intro";
 import Lighting from "./Light";
@@ -14,74 +10,39 @@ import Model from "./Model";
 import ContactPanel from "./ContactPanel";
 import { DetectedInteractiveObject } from "./interactive/InteractiveObject";
 
-import CameraController, {
-  CameraControllerHandle,
-} from "./Camera";
+import CameraController, { CameraControllerHandle } from "./Camera";
 
-type SelectedObject =
-  | "book"
-  | "card"
-  | "contact"
-  | null;
+type SelectedObject = "book" | "card" | "contact" | null;
 
 export default function Scene() {
-  const cameraRef =
-    useRef<CameraControllerHandle>(
-      null
-    );
+  const cameraRef = useRef<CameraControllerHandle>(null);
 
-  const [
-    introFinished,
-    setIntroFinished,
-  ] = useState(false);
+  const [introFinished, setIntroFinished] = useState(false);
 
+  const [selectedObject, setSelectedObject] = useState<SelectedObject>(null);
 
-  const [
-    selectedObject,
-    setSelectedObject,
-  ] = useState<SelectedObject>(null);
+  const [cameraOnPortfolioView, setCameraOnPortfolioView] = useState(false);
 
+  const [contactOpen, setContactOpen] = useState(false);
 
-  const [
-    cameraOnPortfolioView,
-    setCameraOnPortfolioView,
-  ] = useState(false);
+  const [interactiveObjects, setInteractiveObjects] = useState<
+    DetectedInteractiveObject[]
+  >([]);
 
+  const [sweepTrigger, setSweepTrigger] = useState(0);
 
-    const [
-    contactOpen,
-    setContactOpen,
-  ] = useState(false);
+  const [initialLightingComplete, setInitialLightingComplete] = useState(false);
 
-    const [
-      interactiveObjects,
-      setInteractiveObjects,
-    ] = useState<DetectedInteractiveObject[]>([]);
-
-    const [
-      sweepTrigger,
-      setSweepTrigger,
-    ] = useState(0);
-
-    const [
-      initialLightingComplete,
-      setInitialLightingComplete,
-    ] = useState(false);
-
-    const handleInteractiveObjectsChange = useCallback(
-      (objects: DetectedInteractiveObject[]) => {
-        setInteractiveObjects(objects);
-      },
-      []
-    );
+  const handleInteractiveObjectsChange = useCallback(
+    (objects: DetectedInteractiveObject[]) => {
+      setInteractiveObjects(objects);
+    },
+    [],
+  );
 
   const handleBookClick = () => {
-    if (
-      cameraOnPortfolioView &&
-      selectedObject === "book"
-    ) {
-      window.location.href =
-        "https://sylage-archive.vercel.app";
+    if (cameraOnPortfolioView && selectedObject === "book") {
+      window.location.href = "https://sylage-archive.vercel.app";
 
       return;
     }
@@ -91,25 +52,19 @@ export default function Scene() {
     cameraRef.current?.goToPortfolioView();
   };
 
-    const handleContactClick = () => {
-      if (
-        cameraOnPortfolioView &&
-        selectedObject === "contact"
-      ) {
-        setContactOpen(true);
-        return;
-      }
+  const handleContactClick = () => {
+    if (cameraOnPortfolioView && selectedObject === "contact") {
+      setContactOpen(true);
+      return;
+    }
 
-      setSelectedObject("contact");
+    setSelectedObject("contact");
 
-      cameraRef.current?.goToPortfolioView();
-    };
+    cameraRef.current?.goToPortfolioView();
+  };
 
   const handleCardClick = () => {
-    if (
-      cameraOnPortfolioView &&
-      selectedObject === "card"
-    ) {
+    if (cameraOnPortfolioView && selectedObject === "card") {
       cameraRef.current?.goHome();
 
       return;
@@ -130,9 +85,7 @@ export default function Scene() {
 
   const handleInitialLightingComplete = useCallback(() => {
     setInitialLightingComplete(true);
-    setSweepTrigger((trigger) =>
-      trigger === 0 ? 1 : trigger
-    );
+    setSweepTrigger((trigger) => (trigger === 0 ? 1 : trigger));
   }, []);
 
   const handleHomeReached = () => {
@@ -142,57 +95,33 @@ export default function Scene() {
 
   return (
     <>
-      {!introFinished && (
-        <Intro
-          onFinish={() =>
-            setIntroFinished(true)
-          }
-        />
-      )}
+      {!introFinished && <Intro onFinish={() => setIntroFinished(true)} />}
 
-      {contactOpen && (
-        <ContactPanel
-          onClose={() =>
-            setContactOpen(false)
-          }
-        />
-      )}
+      {contactOpen && <ContactPanel onClose={() => setContactOpen(false)} />}
       <Canvas
         camera={{
-          position: [
-            -0.19462416,
-            4.62333714,
-            -2.65721020,
-          ],
+          position: [-0.19462416, 4.62333714, -2.6572102],
           fov: 45,
         }}
       >
         <CameraController
           ref={cameraRef}
-          onPortfolioReached={
-            handlePortfolioReached
-          }
-          onHomeReached={
-            handleHomeReached
-          }
+          onPortfolioReached={handlePortfolioReached}
+          onHomeReached={handleHomeReached}
         />
 
         <Lighting
           enabled={introFinished}
           interactiveObjects={interactiveObjects}
           sweepTrigger={sweepTrigger}
-          onInitialLightingComplete={
-            handleInitialLightingComplete
-          }
+          onInitialLightingComplete={handleInitialLightingComplete}
         />
 
         <Model
           onBookClick={handleBookClick}
           onCardClick={handleCardClick}
           onContactClick={handleContactClick}
-          onInteractiveObjectsChange={
-            handleInteractiveObjectsChange
-          }
+          onInteractiveObjectsChange={handleInteractiveObjectsChange}
         />
       </Canvas>
     </>

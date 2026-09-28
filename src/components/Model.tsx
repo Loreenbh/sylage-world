@@ -1,12 +1,7 @@
 "use client";
 
 import { useGLTF } from "@react-three/drei";
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import * as THREE from "three";
 
@@ -25,16 +20,10 @@ interface ModelProps {
   onBookClick?: () => void;
   onCardClick?: () => void;
   onContactClick?: () => void;
-  onInteractiveObjectsChange?: (
-    objects: DetectedInteractiveObject[]
-  ) => void;
+  onInteractiveObjectsChange?: (objects: DetectedInteractiveObject[]) => void;
 }
 
-type InteractiveObject =
-  | "book"
-  | "card"
-  | "contact"
-  | null;
+type InteractiveObject = "book" | "card" | "contact" | null;
 
 export default function Model({
   onBookClick,
@@ -42,48 +31,22 @@ export default function Model({
   onContactClick,
   onInteractiveObjectsChange,
 }: ModelProps) {
-  const { scene } = useGLTF(
-    "/models/env.glb"
-  );
+  const { scene } = useGLTF("/models/env.glb");
 
-  const [
-    hoveredObject,
-    setHoveredObject,
-  ] = useState<InteractiveObject>(null);
+  const [hoveredObject, setHoveredObject] = useState<InteractiveObject>(null);
 
-  const hoveredRef =
-    useRef<InteractiveObject>(null);
+  const hoveredRef = useRef<InteractiveObject>(null);
 
-  const book = useMemo(
-    () =>
-      scene.getObjectByName(
-        BOOK_NAME
-      ),
-    [scene]
-  );
+  const book = useMemo(() => scene.getObjectByName(BOOK_NAME), [scene]);
 
-  const card = useMemo(
-    () =>
-      scene.getObjectByName(
-        CARD_NAME
-      ),
-    [scene]
-  );
+  const card = useMemo(() => scene.getObjectByName(CARD_NAME), [scene]);
 
-  const contact = useMemo(
-    () =>
-      scene.getObjectByName(
-        CONTACT_NAME
-      ),
-    [scene]
-  );
+  const contact = useMemo(() => scene.getObjectByName(CONTACT_NAME), [scene]);
 
   const interactiveObjects = useMemo(() => {
     const objects = new Map<string, THREE.Object3D>();
 
-    const knownObjects: Array<
-      [string, THREE.Object3D | undefined]
-    > = [
+    const knownObjects: Array<[string, THREE.Object3D | undefined]> = [
       ["book", book],
       ["card", card],
       ["contact", contact],
@@ -96,10 +59,7 @@ export default function Model({
     });
 
     scene.traverse((object) => {
-      if (
-        object.userData.interactive === true &&
-        !objects.has(object.name)
-      ) {
+      if (object.userData.interactive === true && !objects.has(object.name)) {
         objects.set(object.name, object);
       }
     });
@@ -114,119 +74,67 @@ export default function Model({
     onInteractiveObjectsChange?.(interactiveObjects);
   }, [interactiveObjects, onInteractiveObjectsChange]);
 
-  const bookMeshes = useMemo(
-    () => getObjectMeshes(book),
-    [book]
-  );
+  const bookMeshes = useMemo(() => getObjectMeshes(book), [book]);
 
-  const cardMeshes = useMemo(
-    () => getObjectMeshes(card),
-    [card]
-  );
+  const cardMeshes = useMemo(() => getObjectMeshes(card), [card]);
 
-  const contactMeshes = useMemo(
-    () => getObjectMeshes(contact),
-    [contact]
-  );
+  const contactMeshes = useMemo(() => getObjectMeshes(contact), [contact]);
 
-  const originalColors =
-    useRef(
-      new Map<
-        THREE.Material,
-        THREE.Color
-      >()
-    );
+  const originalColors = useRef(new Map<THREE.Material, THREE.Color>());
 
   useEffect(() => {
-    [
-      ...bookMeshes,
-      ...cardMeshes,
-      ...contactMeshes,
-    ].forEach((mesh) => {
-      const materials =
-        Array.isArray(mesh.material)
-          ? mesh.material
-          : [mesh.material];
+    [...bookMeshes, ...cardMeshes, ...contactMeshes].forEach((mesh) => {
+      const materials = Array.isArray(mesh.material)
+        ? mesh.material
+        : [mesh.material];
 
       materials.forEach((material) => {
-        const mat =
-          material as THREE.MeshStandardMaterial;
+        const mat = material as THREE.MeshStandardMaterial;
 
         if (!mat.color) return;
 
-        if (
-          !originalColors.current.has(
-            mat
-          )
-        ) {
-          originalColors.current.set(
-            mat,
-            mat.color.clone()
-          );
+        if (!originalColors.current.has(mat)) {
+          originalColors.current.set(mat, mat.color.clone());
         }
       });
     });
-  }, [
-    bookMeshes,
-    cardMeshes,
-    contactMeshes,
-  ]);
+  }, [bookMeshes, cardMeshes, contactMeshes]);
 
   useEffect(() => {
     setObjectHighlight(
       bookMeshes,
       hoveredObject === "book",
       "#806054",
-      originalColors.current
+      originalColors.current,
     );
 
     setObjectHighlight(
       cardMeshes,
       hoveredObject === "card",
       "#806054",
-      originalColors.current
+      originalColors.current,
     );
 
     setObjectHighlight(
       contactMeshes,
       hoveredObject === "contact",
       "#806054",
-      originalColors.current
+      originalColors.current,
     );
 
-    document.body.style.cursor =
-      hoveredObject
-        ? "pointer"
-        : "default";
+    document.body.style.cursor = hoveredObject ? "pointer" : "default";
 
     return () => {
-      document.body.style.cursor =
-        "default";
+      document.body.style.cursor = "default";
     };
-  }, [
-    hoveredObject,
-    bookMeshes,
-    cardMeshes,
-    contactMeshes,
-  ]);
+  }, [hoveredObject, bookMeshes, cardMeshes, contactMeshes]);
 
-
-  const handlePointerMove = (
-    e: any
-  ) => {
+  const handlePointerMove = (e: any) => {
     const object = e.object;
 
-    if (
-      belongsToObject(
-        object,
-        BOOK_NAME
-      )
-    ) {
-      if (
-        hoveredRef.current !== "book"
-      ) {
-        hoveredRef.current =
-          "book";
+    if (belongsToObject(object, BOOK_NAME)) {
+      if (hoveredRef.current !== "book") {
+        hoveredRef.current = "book";
 
         setHoveredObject("book");
       }
@@ -235,17 +143,9 @@ export default function Model({
       return;
     }
 
-    if (
-      belongsToObject(
-        object,
-        CARD_NAME
-      )
-    ) {
-      if (
-        hoveredRef.current !== "card"
-      ) {
-        hoveredRef.current =
-          "card";
+    if (belongsToObject(object, CARD_NAME)) {
+      if (hoveredRef.current !== "card") {
+        hoveredRef.current = "card";
 
         setHoveredObject("card");
       }
@@ -254,17 +154,9 @@ export default function Model({
       return;
     }
 
-    if (
-      belongsToObject(
-        object,
-        CONTACT_NAME
-      )
-    ) {
-      if (
-        hoveredRef.current !== "contact"
-      ) {
-        hoveredRef.current =
-          "contact";
+    if (belongsToObject(object, CONTACT_NAME)) {
+      if (hoveredRef.current !== "contact") {
+        hoveredRef.current = "contact";
 
         setHoveredObject("contact");
       }
@@ -273,34 +165,23 @@ export default function Model({
       return;
     }
 
-    if (
-      hoveredRef.current !== null
-    ) {
+    if (hoveredRef.current !== null) {
       hoveredRef.current = null;
       setHoveredObject(null);
     }
   };
 
-  const handlePointerOut = (
-    e: any
-  ) => {
+  const handlePointerOut = (e: any) => {
     e.stopPropagation();
 
     hoveredRef.current = null;
     setHoveredObject(null);
   };
 
-  const handleClick = (
-    e: any
-  ) => {
+  const handleClick = (e: any) => {
     const object = e.object;
 
-    if (
-      belongsToObject(
-        object,
-        BOOK_NAME
-      )
-    ) {
+    if (belongsToObject(object, BOOK_NAME)) {
       e.stopPropagation();
 
       onBookClick?.();
@@ -308,12 +189,7 @@ export default function Model({
       return;
     }
 
-    if (
-      belongsToObject(
-        object,
-        CARD_NAME
-      )
-    ) {
+    if (belongsToObject(object, CARD_NAME)) {
       e.stopPropagation();
 
       onCardClick?.();
@@ -321,12 +197,7 @@ export default function Model({
       return;
     }
 
-    if (
-      belongsToObject(
-        object,
-        CONTACT_NAME
-      )
-    ) {
+    if (belongsToObject(object, CONTACT_NAME)) {
       e.stopPropagation();
 
       onContactClick?.();
@@ -339,17 +210,11 @@ export default function Model({
     <primitive
       object={scene}
       rotation={[0, Math.PI, 0]}
-      onPointerMove={
-        handlePointerMove
-      }
-      onPointerOut={
-        handlePointerOut
-      }
+      onPointerMove={handlePointerMove}
+      onPointerOut={handlePointerOut}
       onClick={handleClick}
     />
   );
 }
 
-useGLTF.preload(
-  "/models/env.glb"
-);
+useGLTF.preload("/models/env.glb");

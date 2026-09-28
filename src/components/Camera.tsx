@@ -2,12 +2,7 @@
 
 import { CameraControls } from "@react-three/drei";
 
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 
 import * as THREE from "three";
 
@@ -24,86 +19,73 @@ interface CameraControllerProps {
 
 /*CAMERA — DESKTOP*/
 
-const DESKTOP_HOME_POSITION =
-  new THREE.Vector3(
-    -0.06369691066211441,
-    3.6554354764551578,
-    -7.145363508531997
-  );
+const DESKTOP_HOME_POSITION = new THREE.Vector3(
+  -0.05406547710299313,
+  3.6554354764551578,
+  -5.145386699794555,
+);
 
-const DESKTOP_HOME_TARGET =
-  new THREE.Vector3(
-    0.0026168764236207858,
-    8.955509944730269e-18,
-    6.624760685021101
-  );
+const DESKTOP_HOME_TARGET = new THREE.Vector3(
+  0.01224830998273932,
+  8.955509944730269e-18,
+  8.624737493758543,
+);
 
-const DESKTOP_PORTFOLIO_POSITION =
-  new THREE.Vector3(
-    -0.873557826820947,
-    4.033244539201459,
-    -1.481182116804923
-  );
+const DESKTOP_PORTFOLIO_POSITION = new THREE.Vector3(
+  -0.5800418172867785,
+  4.03324453920146,
+  0.537195536694822,
+);
 
-const DESKTOP_PORTFOLIO_TARGET =
-  new THREE.Vector3(
-    -1.0337152486782129,
-    2.081668171172169e-18,
-    1.5386196331534792
-  );
+const DESKTOP_PORTFOLIO_TARGET = new THREE.Vector3(
+  -0.7401992391440444,
+  1.0408340855860848e-18,
+  3.556997286653223,
+);
 
 /*CAMERA — IPHONE SE < 600px*/
 
-const MOBILE_HOME_POSITION =
-  new THREE.Vector3(
-   1.9928777364680994,
-    4.840980295306595,
-    -8.269284448865504
-  );
+const MOBILE_HOME_POSITION = new THREE.Vector3(
+  2.972726627492723,
+  4.937183697443969,
+  -6.381642545152816,
+);
 
-const MOBILE_HOME_TARGET =
-  new THREE.Vector3(
-    -2.5198916815317056,
-    9.020562075079397e-18,
-    4.347480124795208
-  );
+const MOBILE_HOME_TARGET = new THREE.Vector3(
+  -3.2848150102916587,
+  9.020562075079397e-18,
+  5.427265792871036,
+);
 
-const MOBILE_PORTFOLIO_POSITION =
-  new THREE.Vector3(
-    -0.933836224981,
-    6.348982140964651,
-    -1.7615021217060458
-  );
+const MOBILE_PORTFOLIO_POSITION = new THREE.Vector3(
+  -0.7956124543004424,
+  6.404423826101063,
+  0.3285019177785715,
+);
 
-const MOBILE_PORTFOLIO_TARGET =
-  new THREE.Vector3(
-    -1.0360512971909748,
-    2.0816681711721684e-18,
-    2.138943830207164
-  );
+const MOBILE_PORTFOLIO_TARGET = new THREE.Vector3(
+  -0.4031002642339939,
+  3.4694469519536126e-18,
+  4.118329144366796,
+);
 
 /*CAMERA — IPAD MINI 600px → 1024px*/
 
-const TABLET_HOME_POSITION =
-  new THREE.Vector3(
-    -1.8020095703856305,
-    4.280323700538324,
-    -8.762769156758235
-  );
+const TABLET_HOME_POSITION = new THREE.Vector3(
+  1.240290957275033,
+  4.4247941781237135,
+  -5.459843442890259,
+);
 
-const TABLET_HOME_TARGET =
-  new THREE.Vector3(
-    -2.7996252191758915,
-    8.673617379884037e-18,
-    4.789592939299398
-  );
+const TABLET_HOME_TARGET = new THREE.Vector3(
+  -3.812053506833022,
+  -1.8561541192951838e-17,
+  7.105105353026106,
+);
 
-const TABLET_PORTFOLIO_POSITION =
-  MOBILE_PORTFOLIO_POSITION.clone();
+const TABLET_PORTFOLIO_POSITION = MOBILE_PORTFOLIO_POSITION.clone();
 
-const TABLET_PORTFOLIO_TARGET =
-  MOBILE_PORTFOLIO_TARGET.clone();
-
+const TABLET_PORTFOLIO_TARGET = MOBILE_PORTFOLIO_TARGET.clone();
 
 const ANIMATION_DURATION = 1000;
 
@@ -115,10 +97,8 @@ function getCameraSettings() {
       homePosition: MOBILE_HOME_POSITION,
       homeTarget: MOBILE_HOME_TARGET,
 
-      portfolioPosition:
-        MOBILE_PORTFOLIO_POSITION,
-      portfolioTarget:
-        MOBILE_PORTFOLIO_TARGET,
+      portfolioPosition: MOBILE_PORTFOLIO_POSITION,
+      portfolioTarget: MOBILE_PORTFOLIO_TARGET,
     };
   }
 
@@ -127,10 +107,8 @@ function getCameraSettings() {
       homePosition: TABLET_HOME_POSITION,
       homeTarget: TABLET_HOME_TARGET,
 
-      portfolioPosition:
-        TABLET_PORTFOLIO_POSITION,
-      portfolioTarget:
-        TABLET_PORTFOLIO_TARGET,
+      portfolioPosition: TABLET_PORTFOLIO_POSITION,
+      portfolioTarget: TABLET_PORTFOLIO_TARGET,
     };
   }
 
@@ -138,82 +116,49 @@ function getCameraSettings() {
     homePosition: DESKTOP_HOME_POSITION,
     homeTarget: DESKTOP_HOME_TARGET,
 
-    portfolioPosition:
-      DESKTOP_PORTFOLIO_POSITION,
-    portfolioTarget:
-      DESKTOP_PORTFOLIO_TARGET,
+    portfolioPosition: DESKTOP_PORTFOLIO_POSITION,
+    portfolioTarget: DESKTOP_PORTFOLIO_TARGET,
   };
 }
 
 const CameraController = forwardRef<
   CameraControllerHandle,
   CameraControllerProps
->(function CameraController(
-  {
-    onPortfolioReached,
-    onHomeReached,
-  },
-  ref
-) {
-  const controlsRef =
-    useRef<CameraControls>(null);
+>(function CameraController({ onPortfolioReached, onHomeReached }, ref) {
+  const controlsRef = useRef<CameraControls>(null);
 
-  const animationRef =
-    useRef<number | null>(null);
-
+  const animationRef = useRef<number | null>(null);
 
   const animateTo = (
     position: THREE.Vector3,
     target: THREE.Vector3,
-    onComplete?: () => void
+    onComplete?: () => void,
   ) => {
-    const controls =
-      controlsRef.current;
+    const controls = controlsRef.current;
 
     if (!controls) return;
 
     if (animationRef.current !== null) {
-      cancelAnimationFrame(
-        animationRef.current
-      );
+      cancelAnimationFrame(animationRef.current);
     }
 
-    const startPosition =
-      controls.camera.position.clone();
+    const startPosition = controls.camera.position.clone();
 
-    const startTarget =
-      controls.getTarget(
-        new THREE.Vector3()
-      );
+    const startTarget = controls.getTarget(new THREE.Vector3());
 
-    const startTime =
-      performance.now();
+    const startTime = performance.now();
 
-    const animate = (
-      currentTime: number
-    ) => {
+    const animate = (currentTime: number) => {
       const progress = Math.min(
-        (currentTime - startTime) /
-          ANIMATION_DURATION,
-        1
+        (currentTime - startTime) / ANIMATION_DURATION,
+        1,
       );
 
-      const eased =
-        progress *
-        progress *
-        (3 - 2 * progress);
+      const eased = progress * progress * (3 - 2 * progress);
 
-      const currentPosition =
-        startPosition
-          .clone()
-          .lerp(position, eased);
+      const currentPosition = startPosition.clone().lerp(position, eased);
 
-      const currentTarget =
-        startTarget
-          .clone()
-          .lerp(target, eased);
-console.log("SCREEN WIDTH:", window.innerWidth);
-console.log("CAMERA SETTINGS:", getCameraSettings());
+      const currentTarget = startTarget.clone().lerp(target, eased);
       controls.setLookAt(
         currentPosition.x,
         currentPosition.y,
@@ -223,14 +168,11 @@ console.log("CAMERA SETTINGS:", getCameraSettings());
         currentTarget.y,
         currentTarget.z,
 
-        false
+        false,
       );
 
       if (progress < 1) {
-        animationRef.current =
-          requestAnimationFrame(
-            animate
-          );
+        animationRef.current = requestAnimationFrame(animate);
       } else {
         animationRef.current = null;
 
@@ -238,55 +180,43 @@ console.log("CAMERA SETTINGS:", getCameraSettings());
       }
     };
 
-    animationRef.current =
-      requestAnimationFrame(animate);
+    animationRef.current = requestAnimationFrame(animate);
   };
 
   useImperativeHandle(
     ref,
     () => ({
       goToPortfolioView: () => {
-        const camera =
-          getCameraSettings();
+        const camera = getCameraSettings();
 
         animateTo(
           camera.portfolioPosition,
           camera.portfolioTarget,
-          onPortfolioReached
+          onPortfolioReached,
         );
       },
 
       goHome: () => {
-        const camera =
-          getCameraSettings();
+        const camera = getCameraSettings();
 
-        animateTo(
-          camera.homePosition,
-          camera.homeTarget,
-          onHomeReached
-        );
+        animateTo(camera.homePosition, camera.homeTarget, onHomeReached);
       },
 
       getCameraControls: () => {
         return controlsRef.current;
       },
     }),
-    [
-      onPortfolioReached,
-      onHomeReached,
-    ]
+    [onPortfolioReached, onHomeReached],
   );
 
   useEffect(() => {
-    const controls =
-      controlsRef.current;
+    const controls = controlsRef.current;
 
     if (!controls) return;
 
-    const camera =
-      getCameraSettings();
-console.log("SCREEN WIDTH:", window.innerWidth);
-console.log("CAMERA SETTINGS:", getCameraSettings());
+    const camera = getCameraSettings();
+    console.log("SCREEN WIDTH:", window.innerWidth);
+    console.log("CAMERA SETTINGS:", getCameraSettings());
     controls.setLookAt(
       camera.homePosition.x,
       camera.homePosition.y,
@@ -296,182 +226,17 @@ console.log("CAMERA SETTINGS:", getCameraSettings());
       camera.homeTarget.y,
       camera.homeTarget.z,
 
-      false
+      false,
     );
   }, []);
 
-  /* 
-     TEMPORAIRE KEYBOARD CAMERA CONTROLSA SUPP + TARD POUR MOUVEMENT CAMERA FIXE*/
-  useEffect(() => {
-    const handleKeyDown = (
-      event: KeyboardEvent
-    ) => {
-      const controls =
-        controlsRef.current;
-
-      if (!controls) return;
-
-      const speed = 0.1;
-
-      switch (event.key) {
-        case "ArrowUp":
-          controls.forward(
-            speed,
-            true
-          );
-          break;
-
-        case "ArrowDown":
-          controls.forward(
-            -speed,
-            true
-          );
-          break;
-
-        case "ArrowLeft":
-          controls.truck(
-            -speed,
-            0,
-            true
-          );
-          break;
-
-        case "ArrowRight":
-          controls.truck(
-            speed,
-            0,
-            true
-          );
-          break;
-
-        case "q":
-        case "Q":
-          controls.elevate(
-            speed,
-            true
-          );
-          break;
-
-        case "e":
-        case "E":
-          controls.elevate(
-            -speed,
-            true
-          );
-          break;
-      }
-    };
-
-    window.addEventListener(
-      "keydown",
-      handleKeyDown
-    );
-
-    return () => {
-      window.removeEventListener(
-        "keydown",
-        handleKeyDown
-      );
-    };
-  }, []);
+  /* TEMPORAIRE KEYBOARD CAMERA CONTROLSA SUPP + TARD POUR MOUVEMENT CAMERA FIXE*/
 
   /*TEMPORAIRE DEBUG COORDONNEES CAMERAA SUPP + TARD APRES CADRAGE CAMERA*/
 
-  useEffect(() => {
-    const controls =
-      controlsRef.current;
-
-    if (!controls) return;
-
-    let frameId:
-      number | null = null;
-
-    const lastPosition =
-      new THREE.Vector3();
-
-    const lastTarget =
-      new THREE.Vector3();
-
-    const checkCamera = () => {
-      const position =
-        controls.camera.position;
-
-      const target =
-        controls.getTarget(
-          new THREE.Vector3()
-        );
-
-      const positionChanged =
-        !position.equals(
-          lastPosition
-        );
-
-      const targetChanged =
-        !target.equals(
-          lastTarget
-        );
-
-      if (
-        positionChanged ||
-        targetChanged
-      ) {
-        console.log(
-          "CAMERA POSITION:",
-          {
-            x: position.x,
-            y: position.y,
-            z: position.z,
-          }
-        );
-
-        console.log(
-          "CAMERA TARGET:",
-          {
-            x: target.x,
-            y: target.y,
-            z: target.z,
-          }
-        );
-
-        lastPosition.copy(
-          position
-        );
-
-        lastTarget.copy(
-          target
-        );
-      }
-
-      frameId =
-        requestAnimationFrame(
-          checkCamera
-        );
-    };
-
-    frameId =
-      requestAnimationFrame(
-        checkCamera
-      );
-
-    return () => {
-      if (
-        frameId !== null
-      ) {
-        cancelAnimationFrame(
-          frameId
-        );
-      }
-    };
-  }, []);
-
-  return (
-    <CameraControls
-      ref={controlsRef}
-    />
-  );
+  return <CameraControls ref={controlsRef} enabled={false} />;
 });
 
-CameraController.displayName =
-  "CameraController";
+CameraController.displayName = "CameraController";
 
 export default CameraController;

@@ -43,8 +43,7 @@ export default function Intro({ onFinish }: IntroProps) {
 
         opacity: closing ? 0 : 1,
 
-        transition:
-          "opacity 1.4s cubic-bezier(0.65, 0, 0.35, 1)",
+        transition: "opacity 1.4s cubic-bezier(0.65, 0, 0.35, 1)",
       }}
     >
       <div
@@ -58,12 +57,9 @@ export default function Intro({ onFinish }: IntroProps) {
           alignItems: "center",
           justifyContent: "center",
 
-          transform: closing
-            ? "translateY(-5px)"
-            : "translateY(0)",
+          transform: closing ? "translateY(-5px)" : "translateY(0)",
 
-          transition:
-            "transform 1.4s cubic-bezier(0.65, 0, 0.35, 1)",
+          transition: "transform 1.4s cubic-bezier(0.65, 0, 0.35, 1)",
         }}
       >
         <img
@@ -95,7 +91,6 @@ export default function Intro({ onFinish }: IntroProps) {
             alignItems: "flex-end",
           }}
         >
-
           <img
             src="/sylage-wordmark.png"
             alt="SYLAGE"
@@ -128,7 +123,7 @@ export default function Intro({ onFinish }: IntroProps) {
               whiteSpace: "nowrap",
             }}
           >
-            WORLD
+            CREATIVE PORTFOLIO
           </div>
         </div>
       </div>
