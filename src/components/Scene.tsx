@@ -2,7 +2,7 @@
 
 import { Canvas } from "@react-three/fiber";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 
 import Intro from "./Intro";
 import Lighting from "./Light";
@@ -19,6 +19,12 @@ export default function Scene() {
 
   const [introFinished, setIntroFinished] = useState(false);
 
+  const [orientationReady, setOrientationReady] = useState(false);
+
+  const [orientationDevice, setOrientationDevice] = useState<
+    "PHONE" | "IPAD" | null
+  >(null);
+
   const [selectedObject, setSelectedObject] = useState<SelectedObject>(null);
 
   const [cameraOnPortfolioView, setCameraOnPortfolioView] = useState(false);
@@ -32,6 +38,34 @@ export default function Scene() {
   const [sweepTrigger, setSweepTrigger] = useState(0);
 
   const [initialLightingComplete, setInitialLightingComplete] = useState(false);
+
+  useEffect(() => {
+    const updateOrientation = () => {
+      const isPhone = window.innerWidth < 600;
+      const isIPad =
+        /iPad/.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      const isPortrait = window.innerHeight > window.innerWidth;
+
+      setOrientationDevice(
+        isPortrait && isPhone
+          ? "PHONE"
+          : isPortrait && isIPad
+            ? "IPAD"
+            : null,
+      );
+      setOrientationReady(true);
+    };
+
+    window.addEventListener("resize", updateOrientation);
+    window.addEventListener("orientationchange", updateOrientation);
+    updateOrientation();
+
+    return () => {
+      window.removeEventListener("resize", updateOrientation);
+      window.removeEventListener("orientationchange", updateOrientation);
+    };
+  }, []);
 
   const handleInteractiveObjectsChange = useCallback(
     (objects: DetectedInteractiveObject[]) => {
@@ -95,7 +129,49 @@ export default function Scene() {
 
   return (
     <>
-      {!introFinished && <Intro onFinish={() => setIntroFinished(true)} />}
+      {orientationReady && !orientationDevice && !introFinished && (
+        <Intro onFinish={() => setIntroFinished(true)} />
+      )}
+
+      {orientationDevice && (
+        <div
+          role="status"
+          aria-live="polite"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 10000,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "12px",
+            background: "#211C19",
+            color: "#EAE3D8",
+            fontFamily: "Arial, Helvetica, sans-serif",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "13px",
+              fontWeight: 400,
+              letterSpacing: "0.24em",
+            }}
+          >
+            ROTATE YOUR {orientationDevice}
+          </div>
+          <div
+            style={{
+              fontSize: "11px",
+              fontWeight: 300,
+              letterSpacing: "0.2em",
+            }}
+          >
+            FOR THE FULL EXPERIENCE
+          </div>
+        </div>
+      )}
 
       {contactOpen && <ContactPanel onClose={() => setContactOpen(false)} />}
       <Canvas

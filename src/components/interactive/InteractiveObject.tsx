@@ -34,7 +34,7 @@ export function setSurfaceHighlight(
         });
       }
 
-      mat.emissive.set("#e4cdaa9b");
+      mat.emissive.set("#c9ad8f");
       mat.emissiveIntensity = intensity;
       mat.needsUpdate = true;
     });

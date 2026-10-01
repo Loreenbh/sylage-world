@@ -81,7 +81,7 @@ export default function Lighting({
 
     sourceMeshes.forEach((sourceMesh) => {
       const material = new THREE.MeshBasicMaterial({
-        color: "#e5d1b8d6",
+        color: "#d8c3aa",
 
         transparent: true,
         opacity: 0,
@@ -132,7 +132,7 @@ export default function Lighting({
 
     const overlays = overlaysRef.current;
 
-    const flashOpacity = 0.35;
+    const flashOpacity = 0.50;
 
     const delayBetweenObjects = 900;
 
