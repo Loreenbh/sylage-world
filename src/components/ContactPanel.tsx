@@ -1,63 +1,10 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-
 interface ContactPanelProps {
   onClose: () => void;
 }
 
 export default function ContactPanel({ onClose }: ContactPanelProps) {
-  const [status, setStatus] = useState<
-    "idle" | "sending" | "success" | "error"
-  >("idle");
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (status === "sending") {
-      return;
-    }
-
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-
-    const name = formData.get("name");
-    const email = formData.get("email");
-    const message = formData.get("message");
-
-    setStatus("sending");
-
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          message,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || "Impossible d'envoyer le message.");
-      }
-
-      console.log("Réponse API :", data);
-
-      form.reset();
-
-      setStatus("success");
-    } catch (error) {
-      console.error("Erreur lors de l'envoi :", error);
-
-      setStatus("error");
-    }
-  };
-
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-[#141313]/70 px-5 py-8 backdrop-blur-[3px]">
       <div
@@ -79,12 +26,7 @@ export default function ContactPanel({ onClose }: ContactPanelProps) {
         "
       >
         <div
-          className="
-            pointer-events-none
-            absolute
-            inset-0
-            opacity-[0.07]
-          "
+          className="pointer-events-none absolute inset-0 opacity-[0.07]"
           style={{
             backgroundImage: `
               radial-gradient(
@@ -114,9 +56,9 @@ export default function ContactPanel({ onClose }: ContactPanelProps) {
             text-[22px]
             font-light
             leading-none
-            opacity-60
+            opacity-50
             transition-opacity
-            duration-300
+            duration-500
             hover:opacity-100
             sm:right-7
             sm:top-7
@@ -126,164 +68,95 @@ export default function ContactPanel({ onClose }: ContactPanelProps) {
         </button>
 
         <div className="relative z-10">
-          <div className="mb-14">
+          <div className="mb-20">
             <img
               src="/contact.png"
               alt="CONTACT"
               className="
                 h-auto
-                w-[240px]
-                sm:w-[330px]
+                w-[220px]
+                sm:w-[300px]
               "
             />
 
-            <div className="mt-5 h-px w-full bg-[#141313]/20" />
+            <div className="mt-6 h-px w-full bg-[#141313]/20" />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-9">
-            <div>
-              <label
-                htmlFor="name"
-                className="
-                  mb-2
-                  block
-                  text-[10px]
-                  tracking-[0.25em]
-                  opacity-60
-                  sm:text-[12px]
-                "
-              >
-                NAME
-              </label>
+          {/* Links */}
+          <div
+            className="
+              flex
+              flex-wrap
+              items-center
+              justify-center
+              gap-x-5
+              gap-y-3
+              text-center
+              sm:gap-x-7
+            "
+          >
+            <a
+              href="/cv.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+                text-[12px]
+                font-light
+                tracking-[0.28em]
+                opacity-70
+                transition-opacity
+                duration-500
+                hover:opacity-100
+                sm:text-[14px]
+              "
+            >
+              CV
+            </a>
 
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                className="
-                  w-full
-                  border-0
-                  border-b
-                  border-[#141313]/30
-                  bg-transparent
-                  px-0
-                  pb-3
-                  text-[15px]
-                  outline-none
-                  transition-colors
-                  duration-300
-                  placeholder:text-[#141313]/30
-                  focus:border-[#141313]
-                  sm:text-[17px]
-                "
-              />
-            </div>
+            <span className="text-[8px] opacity-45 sm:text-[9px]">•</span>
 
-            <div>
-              <label
-                htmlFor="email"
-                className="
-                  mb-2
-                  block
-                  text-[10px]
-                  tracking-[0.25em]
-                  opacity-60
-                  sm:text-[12px]
-                "
-              >
-                EMAIL
-              </label>
+            <a
+              href="https://github.com/Loreenbh"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+                text-[12px]
+                font-light
+                tracking-[0.28em]
+                opacity-70
+                transition-opacity
+                duration-500
+                hover:opacity-100
+                sm:text-[14px]
+              "
+            >
+              GITHUB
+            </a>
 
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                className="
-                  w-full
-                  border-0
-                  border-b
-                  border-[#141313]/30
-                  bg-transparent
-                  px-0
-                  pb-3
-                  text-[15px]
-                  outline-none
-                  transition-colors
-                  duration-300
-                  placeholder:text-[#141313]/30
-                  focus:border-[#141313]
-                  sm:text-[17px]
-                "
-              />
-            </div>
+            <span className="text-[8px] opacity-45 sm:text-[9px]">•</span>
 
-            <div>
-              <label
-                htmlFor="message"
-                className="
-                  mb-2
-                  block
-                  text-[10px]
-                  tracking-[0.25em]
-                  opacity-60
-                  sm:text-[12px]
-                "
-              >
-                MESSAGE
-              </label>
-
-              <textarea
-                id="message"
-                name="message"
-                required
-                rows={3}
-                className="
-                  w-full
-                  resize-none
-                  border-0
-                  border-b
-                  border-[#141313]/30
-                  bg-transparent
-                  px-0
-                  pb-3
-                  text-[15px]
-                  outline-none
-                  transition-colors
-                  duration-300
-                  focus:border-[#141313]
-                  sm:text-[17px]
-                "
-              />
-            </div>
-
-            <div className="pt-3">
-              <button
-                type="submit"
-                disabled={status === "sending"}
-                className="
-                  text-[11px]
-                  tracking-[0.3em]
-                  transition-opacity
-                  duration-300
-                  disabled:cursor-not-allowed
-                  disabled:opacity-40
-                  hover:opacity-50
-                  sm:text-[12px]
-                "
-              >
-                {status === "sending" && "SENDING..."}
-                {status === "success" && "SENT ✓"}
-                {status === "error" && "TRY AGAIN"}
-                {status === "idle" && "SEND →"}
-              </button>
-            </div>
-          </form>
+            <a
+              href="https://linkedin.com/in/loreen-begliomini-hazan"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+                text-[12px]
+                font-light
+                tracking-[0.28em]
+                opacity-70
+                transition-opacity
+                duration-500
+                hover:opacity-100
+                sm:text-[14px]
+              "
+            >
+              LINKEDIN
+            </a>
+          </div>
 
           <div
             className="
-              mt-16
+              mt-20
               border-t
               border-[#141313]/20
               pt-7
@@ -291,61 +164,14 @@ export default function ContactPanel({ onClose }: ContactPanelProps) {
           >
             <div
               className="
-                flex
-                flex-wrap
-                items-center
-                gap-x-8
-                gap-y-4
+                text-[9px]
+                font-light
+                tracking-[0.28em]
+                opacity-40
+                sm:text-[10px]
               "
             >
-              <a
-                href="https://linkedin.com/in/loreen-begliomini-hazan"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="
-                  text-[11px]
-                  tracking-[0.2em]
-                  transition-opacity
-                  duration-300
-                  hover:opacity-50
-                "
-              >
-                LINKEDIN
-              </a>
-
-              <span className="text-[9px] opacity-60">•</span>
-
-              <a
-                href="https://github.com/Loreenbh"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="
-                  text-[11px]
-                  tracking-[0.2em]
-                  transition-opacity
-                  duration-300
-                  hover:opacity-50
-                "
-              >
-                GITHUB
-              </a>
-
-              <span className="text-[9px] opacity-60">•</span>
-
-              <a
-                href="/cv.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="
-                  text-[11px]
-                  tracking-[0.2em]
-                  transition-opacity
-                  duration-300
-                  hover:opacity-50
-                "
-              >
-                CV
-              </a>
+              SYLAGE — CREATIVE PORTFOLIO
             </div>
           </div>
         </div>
