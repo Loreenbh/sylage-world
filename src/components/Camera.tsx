@@ -148,8 +148,7 @@ const CameraController = forwardRef<
       false,
     );
   }, []);
-  return <CameraControls ref={controlsRef} enabled={false} />;
-
+    return <CameraControls ref={controlsRef} enabled={false} />;
 });
 
 CameraController.displayName = "CameraController";
