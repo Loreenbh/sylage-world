@@ -28,7 +28,7 @@ A digital space where the different projects, experiments, and visual identities
 
 ```bash
 git clone https://github.com/Loreenbh/sylage-world
-cd portfolio
+cd sylage-world
 npm install
 npm run dev
 ```
