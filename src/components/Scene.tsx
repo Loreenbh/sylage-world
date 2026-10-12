@@ -1,7 +1,6 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-
 import { useRef, useState, useCallback, useEffect } from "react";
 
 import Intro from "./Intro";
@@ -9,7 +8,6 @@ import Lighting from "./Light";
 import Model from "./Model";
 import ContactPanel from "./ContactPanel";
 import { DetectedInteractiveObject } from "./interactive/InteractiveObject";
-
 import CameraController, { CameraControllerHandle } from "./Camera";
 
 type SelectedObject = "book" | "card" | "contact" | null;
@@ -18,16 +16,17 @@ export default function Scene() {
   const cameraRef = useRef<CameraControllerHandle>(null);
 
   const [introFinished, setIntroFinished] = useState(false);
-
   const [orientationReady, setOrientationReady] = useState(false);
 
   const [orientationDevice, setOrientationDevice] = useState<
     "PHONE" | "IPAD" | null
   >(null);
 
-  const [selectedObject, setSelectedObject] = useState<SelectedObject>(null);
+  const [selectedObject, setSelectedObject] =
+    useState<SelectedObject>(null);
 
-  const [cameraOnPortfolioView, setCameraOnPortfolioView] = useState(false);
+  const [cameraOnPortfolioView, setCameraOnPortfolioView] =
+    useState(false);
 
   const [contactOpen, setContactOpen] = useState(false);
 
@@ -36,15 +35,21 @@ export default function Scene() {
   >([]);
 
   const [sweepTrigger, setSweepTrigger] = useState(0);
+  const [initialLightingComplete, setInitialLightingComplete] =
+    useState(false);
 
-  const [initialLightingComplete, setInitialLightingComplete] = useState(false);
+  // Indication d'exploration
+  const [showInstruction, setShowInstruction] = useState(true);
 
   useEffect(() => {
     const updateOrientation = () => {
       const isPhone = window.innerWidth < 600;
+
       const isIPad =
         /iPad/.test(navigator.userAgent) ||
-        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+        (navigator.platform === "MacIntel" &&
+          navigator.maxTouchPoints > 1);
+
       const isPortrait = window.innerHeight > window.innerWidth;
 
       setOrientationDevice(
@@ -54,11 +59,13 @@ export default function Scene() {
             ? "IPAD"
             : null,
       );
+
       setOrientationReady(true);
     };
 
     window.addEventListener("resize", updateOrientation);
     window.addEventListener("orientationchange", updateOrientation);
+
     updateOrientation();
 
     return () => {
@@ -75,37 +82,38 @@ export default function Scene() {
   );
 
   const handleBookClick = () => {
+    setShowInstruction(false);
+
     if (cameraOnPortfolioView && selectedObject === "book") {
       window.location.href = "https://sylage-archive.vercel.app";
-
       return;
     }
 
     setSelectedObject("book");
-
     cameraRef.current?.goToPortfolioView();
   };
 
   const handleContactClick = () => {
+    setShowInstruction(false);
+
     if (cameraOnPortfolioView && selectedObject === "contact") {
       setContactOpen(true);
       return;
     }
 
     setSelectedObject("contact");
-
     cameraRef.current?.goToPortfolioView();
   };
 
   const handleCardClick = () => {
+    setShowInstruction(false);
+
     if (cameraOnPortfolioView && selectedObject === "card") {
       cameraRef.current?.goHome();
-
       return;
     }
 
     setSelectedObject("card");
-
     cameraRef.current?.goToPortfolioView();
   };
 
@@ -125,6 +133,7 @@ export default function Scene() {
   const handleHomeReached = () => {
     setCameraOnPortfolioView(false);
     setSelectedObject(null);
+    setShowInstruction(true);
   };
 
   return (
@@ -161,6 +170,7 @@ export default function Scene() {
           >
             ROTATE YOUR {orientationDevice}
           </div>
+
           <div
             style={{
               fontSize: "11px",
@@ -173,7 +183,52 @@ export default function Scene() {
         </div>
       )}
 
-      {contactOpen && <ContactPanel onClose={() => setContactOpen(false)} />}
+      {/* Indication inscirptions */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          left: 0,
+          right: 0,
+          bottom: "clamp(16px, 3.5vh, 36px)",
+          zIndex: 10,
+          display: "flex",
+          justifyContent: "center",
+          paddingInline: "16px",
+          pointerEvents: "none",
+          opacity:
+            introFinished &&
+            !orientationDevice &&
+            !cameraOnPortfolioView &&
+            showInstruction
+              ? 1
+              : 0,
+          transition: "opacity 1200ms ease",
+        }}
+      >
+        <div
+          style={{
+            color: "#EAE3D8",
+            fontFamily: "Roboto, sans-serif",
+            fontSize: "clamp(8px, 0.65vw, 10px)",
+            fontWeight: 300,
+            letterSpacing: "0.24em",
+            lineHeight: 1.6,
+            textAlign: "center",
+            textTransform: "uppercase",
+            opacity: 0.28,
+            textShadow: "0 1px 8px rgba(0,0,0,0.12)",
+            whiteSpace: "normal",
+          }}
+        >
+          SELECT AN OBJECT TO EXPLORE
+        </div>
+      </div>
+
+      {contactOpen && (
+        <ContactPanel onClose={() => setContactOpen(false)} />
+      )}
+
       <Canvas
         camera={{
           position: [-0.19462416, 4.62333714, -2.6572102],
