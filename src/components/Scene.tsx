@@ -221,7 +221,7 @@ export default function Scene() {
             whiteSpace: "normal",
           }}
         >
-          SELECT AN OBJECT TO EXPLORE
+          A WORLD TO DISCOVER
         </div>
       </div>
 
