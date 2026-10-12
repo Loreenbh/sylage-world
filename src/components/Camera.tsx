@@ -16,15 +16,15 @@ interface CameraControllerProps {
 }
 
 const HOME_POSITION = new THREE.Vector3(
-  -0.054604370803564534,
-  3.2043425133609307,
-  -5.257288515542129,
+  -0.2459337614741019,
+  3.2043425133609302,
+  -3.4563462443225283,
 );
 
 const HOME_TARGET = new THREE.Vector3(
-  0.01224830998273932,
-  8.955509944730269e-18,
-  8.624737493758543,
+  -0.17908108068779804,
+  8.944667923005415e-18,
+  10.42567976497814,
 );
 
 const PORTFOLIO_POSITION = new THREE.Vector3(
@@ -148,6 +148,52 @@ const CameraController = forwardRef<
       false,
     );
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const controls = controlsRef.current;
+
+      if (!controls) return;
+
+      const speed = 0.1;
+
+      switch (event.key) {
+        case "ArrowUp":
+          controls.forward(speed, true);
+          break;
+
+        case "ArrowDown":
+          controls.forward(-speed, true);
+          break;
+
+        case "ArrowLeft":
+          controls.truck(-speed, 0, true);
+          break;
+
+        case "ArrowRight":
+          controls.truck(speed, 0, true);
+          break;
+
+        case "q":
+        case "Q":
+          controls.elevate(speed, true);
+          break;
+
+        case "e":
+        case "E":
+          controls.elevate(-speed, true);
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  /*TEMPORAIRE DEBUG COORDONNEES CAMERAA SUPP + TARD APRES CADRAGE CAMERA*/
     return <CameraControls ref={controlsRef} enabled={false} />;
 });
 
