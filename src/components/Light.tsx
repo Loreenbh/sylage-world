@@ -25,6 +25,7 @@ export default function Lighting({
   const [lightIntensity, setLightIntensity] = useState(0);
 
   const overlaysRef = useRef<THREE.Mesh[]>([]);
+  const spotlightTarget = useRef(new THREE.Object3D());
   useEffect(() => {
     if (!enabled) return;
 
@@ -213,29 +214,23 @@ export default function Lighting({
 
   return (
     <>
-      <ambientLight intensity={0.28} color="#b3ada8" />
+      {/* Lumière ambiante : la pièce reste lisible sans concurrencer le bureau */}
+      <ambientLight intensity={0.24} color="#d1c7bc" />
 
-      <directionalLight
-        position={[-3.8, 3.4, 3.8]}
-        intensity={lightIntensity * 0.72}
-        color="#cbb1ad"
+      {/* Cible du projecteur : centre de la scène / bureau */}
+      <primitive object={spotlightTarget.current} position={[0, 0, 0]} />
+
+      {/* Projecteur reculé et faisceau plus large */}
+      <spotLight
+        target={spotlightTarget.current}
+        position={[0, 6.2, -2.4]}
+        color="#f2e6d6"
+        intensity={lightIntensity * 16}
+        angle={0.78}
+        penumbra={0.82}
+        distance={12}
+        decay={2}
       />
-
-      <directionalLight
-        position={[3.8, 3.4, 3.8]}
-        intensity={lightIntensity * 0.58}
-        color="#c9ad9d"
-      />
-
-      <directionalLight position={[3, 4, -4]} intensity={0.3} color="#a1adb5" />
-
-      <directionalLight
-        position={[-4, 3, -3]}
-        intensity={0.16}
-        color="#9ba5ad"
-      />
-
-      <directionalLight position={[0, 8, 5]} intensity={0.04} color="#c5b9ab" />
     </>
   );
 }
