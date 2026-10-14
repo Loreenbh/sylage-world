@@ -29,6 +29,7 @@ export default function Scene() {
     useState(false);
 
   const [contactOpen, setContactOpen] = useState(false);
+  const [galleryOpen, setGalleryOpen] = useState(false);
 
   const [interactiveObjects, setInteractiveObjects] = useState<
     DetectedInteractiveObject[]
@@ -91,6 +92,11 @@ export default function Scene() {
 
     setSelectedObject("book");
     cameraRef.current?.goToPortfolioView();
+  };
+
+  const handleGalleryClick = () => {
+    setShowInstruction(false);
+    setGalleryOpen(true);
   };
 
   const handleContactClick = () => {
@@ -225,6 +231,97 @@ export default function Scene() {
         </div>
       </div>
 
+      {galleryOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="gallery-title"
+          onClick={() => setGalleryOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 10001,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "24px",
+            background: "rgba(20, 17, 15, 0.78)",
+            backdropFilter: "blur(5px)",
+            color: "#EAE3D8",
+            fontFamily: "Roboto, Arial, sans-serif",
+            textAlign: "center",
+          }}
+        >
+          <div
+            onClick={(event) => event.stopPropagation()}
+            style={{
+              position: "relative",
+              width: "min(100%, 520px)",
+              padding: "clamp(32px, 6vw, 64px) 24px",
+              border: "1px solid rgba(234, 227, 216, 0.22)",
+              background: "rgba(33, 28, 25, 0.94)",
+            }}
+          >
+            <button
+              type="button"
+              aria-label="Close gallery message"
+              onClick={() => setGalleryOpen(false)}
+              style={{
+                position: "absolute",
+                top: "16px",
+                right: "18px",
+                border: 0,
+                background: "transparent",
+                color: "#EAE3D8",
+                opacity: 0.65,
+                fontSize: "22px",
+                fontWeight: 300,
+                cursor: "pointer",
+              }}
+            >
+              ×
+            </button>
+            <div style={{
+              fontSize: "10px",
+              letterSpacing: "0.28em",
+              opacity: 0.62,
+              marginBottom: "24px",
+            }}>
+              SYLAGE · GALLERY
+            </div>
+            <h2
+              id="gallery-title"
+              style={{
+                margin: "0 0 16px",
+                fontFamily: "Bodoni Moda, Georgia, serif",
+                fontSize: "clamp(25px, 4vw, 36px)",
+                fontWeight: 400,
+                lineHeight: 1.2,
+              }}
+            >
+              A new space is taking shape.
+            </h2>
+            <p style={{
+              margin: 0,
+              fontSize: "12px",
+              lineHeight: 1.8,
+              letterSpacing: "0.06em",
+              opacity: 0.7,
+            }}>
+              The gallery is currently under construction.
+            </p>
+            <div style={{
+              marginTop: "32px",
+              fontSize: "9px",
+              letterSpacing: "0.28em",
+              opacity: 0.55,
+            }}>
+              COMING SOON
+            </div>
+          </div>
+        </div>
+      )}
+
       {contactOpen && (
         <ContactPanel onClose={() => setContactOpen(false)} />
       )}
@@ -252,6 +349,7 @@ export default function Scene() {
           onBookClick={handleBookClick}
           onCardClick={handleCardClick}
           onContactClick={handleContactClick}
+          onGalleryClick={handleGalleryClick}
           onInteractiveObjectsChange={handleInteractiveObjectsChange}
         />
       </Canvas>
