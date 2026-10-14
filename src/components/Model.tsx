@@ -20,15 +20,29 @@ interface ModelProps {
   onBookClick?: () => void;
   onCardClick?: () => void;
   onContactClick?: () => void;
+  onGalleryClick?: () => void;
   onInteractiveObjectsChange?: (objects: DetectedInteractiveObject[]) => void;
 }
 
-type InteractiveObject = "book" | "card" | "contact" | null;
+type InteractiveObject = "book" | "card" | "contact" | "gallery" | null;
+
+const isGalleryDoor = (object: THREE.Object3D) => {
+  let current: THREE.Object3D | null = object;
+
+  while (current) {
+    const normalizedName = current.name.toLowerCase().replace(/[ _-]/g, "");
+    if (normalizedName.includes("gallerydoor")) return true;
+    current = current.parent;
+  }
+
+  return false;
+};
 
 export default function Model({
   onBookClick,
   onCardClick,
   onContactClick,
+  onGalleryClick,
   onInteractiveObjectsChange,
 }: ModelProps) {
   const { scene } = useGLTF("/models/env.glb");
@@ -132,6 +146,15 @@ export default function Model({
   const handlePointerMove = (e: any) => {
     const object = e.object;
 
+    if (isGalleryDoor(object)) {
+      if (hoveredRef.current !== "gallery") {
+        hoveredRef.current = "gallery";
+        setHoveredObject("gallery");
+      }
+      e.stopPropagation();
+      return;
+    }
+
     if (belongsToObject(object, BOOK_NAME)) {
       if (hoveredRef.current !== "book") {
         hoveredRef.current = "book";
@@ -180,6 +203,12 @@ export default function Model({
 
   const handleClick = (e: any) => {
     const object = e.object;
+
+    if (isGalleryDoor(object)) {
+      e.stopPropagation();
+      onGalleryClick?.();
+      return;
+    }
 
     if (belongsToObject(object, BOOK_NAME)) {
       e.stopPropagation();
