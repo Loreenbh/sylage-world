@@ -1,6 +1,8 @@
+
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 import {
@@ -24,24 +26,58 @@ export default function Lighting({
   const [lightIntensity, setLightIntensity] = useState(0);
 
   const overlaysRef = useRef<THREE.Mesh[]>([]);
-<<<<<<< Updated upstream
-  const spotlightTarget = useRef(new THREE.Object3D());
-=======
+  const { scene } = useThree();
 
-  // Cible du projecteur : le centre du bureau
-  const spotlightTarget = useMemo(
-    () => new THREE.Object3D(),
-    [],
-  );
+  // Cible de la lumière principale
+  const spotlightTarget = useMemo(() => new THREE.Object3D(), []);
 
-  // Allumage progressif
->>>>>>> Stashed changes
+  // Cibles des lumières latérales
+  const leftTarget = useMemo(() => new THREE.Object3D(), []);
+  const rightTarget = useMemo(() => new THREE.Object3D(), []);
+
+  const leftLight = useRef<THREE.SpotLight>(null);
+  const rightLight = useRef<THREE.SpotLight>(null);
+
+  const leftPosition = useMemo(() => new THREE.Vector3(), []);
+  const rightPosition = useMemo(() => new THREE.Vector3(), []);
+
+  // Suivi des repères placés dans Blender
+  useFrame(() => {
+    const leftMarker = scene.getObjectByName("LightLeft");
+    const rightMarker = scene.getObjectByName("LightRight");
+
+    if (leftMarker && leftLight.current) {
+      leftMarker.getWorldPosition(leftPosition);
+
+      leftLight.current.position.copy(leftPosition);
+
+      leftTarget.position.set(
+        leftPosition.x,
+        leftPosition.y - 2.5,
+        leftPosition.z,
+      );
+    }
+
+    if (rightMarker && rightLight.current) {
+      rightMarker.getWorldPosition(rightPosition);
+
+      rightLight.current.position.copy(rightPosition);
+
+      rightTarget.position.set(
+        rightPosition.x,
+        rightPosition.y - 2.5,
+        rightPosition.z,
+      );
+    }
+  });
+
   useEffect(() => {
     if (!enabled) return;
 
     let startTime: number | null = null;
+    let animationFrame = 0;
+
     const duration = 4000;
-    let animationFrame: number;
 
     const animate = (currentTime: number) => {
       if (startTime === null) {
@@ -71,7 +107,6 @@ export default function Lighting({
     };
   }, [enabled, onInitialLightingComplete]);
 
-  // Création des overlays lumineux sur les objets interactifs
   useEffect(() => {
     overlaysRef.current.forEach((overlay) => {
       overlay.removeFromParent();
@@ -93,7 +128,8 @@ export default function Lighting({
 
     sourceMeshes.forEach((sourceMesh) => {
       const material = new THREE.MeshBasicMaterial({
-        color: "#d8c3aa",
+        // Beige chaud plutôt que blanc froid
+        color: "#d5cabe",
         transparent: true,
         opacity: 0,
         depthTest: false,
@@ -113,6 +149,7 @@ export default function Lighting({
       overlay.position.set(0, 0, 0);
       overlay.rotation.set(0, 0, 0);
       overlay.scale.set(1, 1, 1);
+
       overlay.renderOrder = 1000;
       overlay.raycast = () => null;
 
@@ -133,7 +170,6 @@ export default function Lighting({
     };
   }, [interactiveObjects]);
 
-  // Balayage lumineux successif des objets
   useEffect(() => {
     if (
       !enabled ||
@@ -145,7 +181,8 @@ export default function Lighting({
 
     const overlays = overlaysRef.current;
 
-    const flashOpacity = 0.50;
+    const flashOpacity = 0.24;
+
     const delayBetweenObjects = 900;
     const fadeInDuration = 1000;
     const holdDuration = 500;
@@ -159,7 +196,7 @@ export default function Lighting({
       objectDuration;
 
     const startTime = performance.now();
-    let animationFrame: number;
+    let animationFrame = 0;
 
     const smoothstep = (value: number) => {
       const x = Math.max(0, Math.min(1, value));
@@ -211,7 +248,9 @@ export default function Lighting({
         animationFrame = requestAnimationFrame(animate);
       } else {
         overlays.forEach((overlay) => {
-          (overlay.material as THREE.MeshBasicMaterial).opacity = 0;
+          (
+            overlay.material as THREE.MeshBasicMaterial
+          ).opacity = 0;
         });
       }
     };
@@ -222,58 +261,60 @@ export default function Lighting({
       cancelAnimationFrame(animationFrame);
 
       overlays.forEach((overlay) => {
-        (overlay.material as THREE.MeshBasicMaterial).opacity = 0;
+        (
+          overlay.material as THREE.MeshBasicMaterial
+        ).opacity = 0;
       });
     };
   }, [enabled, sweepTrigger]);
 
-<<<<<<< Updated upstream
   return (
     <>
-      {/* Lumière ambiante : la pièce reste lisible sans concurrencer le bureau */}
-      <ambientLight intensity={0.24} color="#d1c7bc" />
+      <ambientLight
+        intensity={0.2}
+        color="#d1c7bc"
+      />
 
-      {/* Cible du projecteur : centre de la scène / bureau */}
-      <primitive object={spotlightTarget.current} position={[0, 0, 0]} />
+      <primitive
+        object={spotlightTarget}
+        position={[0, 0, 0]}
+      />
 
-      {/* Projecteur reculé et faisceau plus large */}
       <spotLight
-        target={spotlightTarget.current}
-        position={[0, 6.2, -2.4]}
+        target={spotlightTarget}
+        position={[-2, 9, 0.7]}
         color="#f2e6d6"
-        intensity={lightIntensity * 16}
-        angle={0.78}
-        penumbra={0.82}
-        distance={12}
+        intensity={lightIntensity * 42}
+        angle={0.38}
+        penumbra={0.45}
+        distance={15}
         decay={2}
+      />
+
+      <primitive object={leftTarget} />
+      <primitive object={rightTarget} />
+
+      <spotLight
+        ref={leftLight}
+        target={leftTarget}
+        color="#e4d0b8"
+        intensity={lightIntensity * 2.8}
+        angle={0.65}
+        penumbra={0.8}
+        distance={10}
+        decay={1.2}
+      />
+
+      <spotLight
+        ref={rightLight}
+        target={rightTarget}
+        color="#e4d0b8"
+        intensity={lightIntensity * 2.8}
+        angle={0.65}
+        penumbra={0.8}
+        distance={10}
+        decay={1.2}
       />
     </>
   );
-=======
-  return (
-    <>
-
-    {/* Ambiance générale : pièce sombre, mais encore lisible */}
-    <ambientLight
-      intensity={0.16}
-      color="#d1c7bc"
-    />
-
-    {/* Projecteur principal dirigé vers le bureau central */}
-    <primitive object={spotlightTarget} position={[0, 0, 0]} />
-
-    <spotLight
-      target={spotlightTarget}
-      position={[0, 5.5, -0.8]}
-      color="#f2e6d6"
-      intensity={lightIntensity * 24}
-      angle={0.62}
-      penumbra={0.8}
-      distance={10}
-      decay={2}
-    />
-
-    </>
-  );
->>>>>>> Stashed changes
 }

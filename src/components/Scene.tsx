@@ -254,6 +254,7 @@ export default function Scene() {
             backdropFilter: "blur(5px)",
             color: "#EAE3D8",
             fontFamily: "Roboto, Arial, sans-serif",
+            fontWeight: 300,
             textAlign: "center",
           }}
         >
@@ -267,60 +268,75 @@ export default function Scene() {
               background: "rgba(33, 28, 25, 0.94)",
             }}
           >
+            {/* Bouton de fermeture */}
             <button
               type="button"
-              aria-label="Close gallery message"
-              onClick={() => setGalleryOpen(false)}
+              onClick={handleGalleryClose}
+              aria-label="Close gallery"
               style={{
                 position: "absolute",
                 top: "16px",
                 right: "18px",
-                border: 0,
                 background: "transparent",
+                border: "none",
                 color: "#EAE3D8",
-                opacity: 0.65,
+                fontFamily: "Roboto, sans-serif",
                 fontSize: "22px",
                 fontWeight: 300,
                 cursor: "pointer",
+                opacity: 0.7,
               }}
             >
               ×
             </button>
-            <div style={{
-              fontSize: "10px",
-              letterSpacing: "0.28em",
-              opacity: 0.62,
-              marginBottom: "24px",
-            }}>
+
+            <div
+              style={{
+                fontSize: "10px",
+                letterSpacing: "0.28em",
+                opacity: 0.62,
+                marginBottom: "24px",
+                fontWeight: 300,
+              }}
+            >
               SYLAGE · GALLERY
             </div>
+
             <h2
               id="gallery-title"
               style={{
                 margin: "0 0 16px",
-                fontFamily: "Bodoni Moda, Georgia, serif",
-                fontSize: "clamp(25px, 4vw, 36px)",
-                fontWeight: 400,
+                fontSize: "clamp(25px, 4vw, 26px)",
+                opacity: 0.80,
+                fontWeight: 200,
                 lineHeight: 1.2,
               }}
             >
               A new space is taking shape.
             </h2>
-            <p style={{
-              margin: 0,
-              fontSize: "12px",
-              lineHeight: 1.8,
-              letterSpacing: "0.06em",
-              opacity: 0.7,
-            }}>
+
+            <p
+              style={{
+                margin: 0,
+                fontSize: "12px",
+                fontWeight: 300,
+                lineHeight: 1.8,
+                letterSpacing: "0.06em",
+                opacity: 0.7,
+              }}
+            >
               The gallery is currently under construction.
             </p>
-            <div style={{
-              marginTop: "32px",
-              fontSize: "9px",
-              letterSpacing: "0.28em",
-              opacity: 0.55,
-            }}>
+
+            <div
+              style={{
+                marginTop: "32px",
+                fontSize: "9px",
+                fontWeight: 300,
+                letterSpacing: "0.28em",
+                opacity: 0.55,
+              }}
+            >
               COMING SOON
             </div>
           </div>
