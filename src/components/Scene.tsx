@@ -99,6 +99,11 @@ export default function Scene() {
     setGalleryOpen(true);
   };
 
+  const handleGalleryClose = () => {
+    setGalleryOpen(false);
+    setShowInstruction(true);
+  };
+
   const handleContactClick = () => {
     setShowInstruction(false);
 
@@ -236,7 +241,7 @@ export default function Scene() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="gallery-title"
-          onClick={() => setGalleryOpen(false)}
+          onClick={handleGalleryClose}
           style={{
             position: "fixed",
             inset: 0,
