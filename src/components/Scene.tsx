@@ -39,7 +39,6 @@ export default function Scene() {
   const [initialLightingComplete, setInitialLightingComplete] =
     useState(false);
 
-  // Indication d'exploration
   const [showInstruction, setShowInstruction] = useState(true);
 
   useEffect(() => {
@@ -221,9 +220,9 @@ export default function Scene() {
           style={{
             color: "#EAE3D8",
             fontFamily: "Roboto, sans-serif",
-            fontSize: "clamp(8px, 0.65vw, 10px)",
+            fontSize: "clamp(11px, 0.85vw, 14px)",
             fontWeight: 300,
-            letterSpacing: "0.24em",
+            letterSpacing: "0.30em",
             lineHeight: 1.6,
             textAlign: "center",
             textTransform: "uppercase",
@@ -306,7 +305,8 @@ export default function Scene() {
               id="gallery-title"
               style={{
                 margin: "0 0 16px",
-                fontSize: "clamp(25px, 4vw, 26px)",
+                fontSize: "clamp(20px, 4vw, 20px)",
+                letterSpacing: "0.28em",
                 opacity: 0.80,
                 fontWeight: 200,
                 lineHeight: 1.2,

@@ -28,10 +28,8 @@ export default function Lighting({
   const overlaysRef = useRef<THREE.Mesh[]>([]);
   const { scene } = useThree();
 
-  // Cible de la lumière principale
   const spotlightTarget = useMemo(() => new THREE.Object3D(), []);
 
-  // Cibles des lumières latérales
   const leftTarget = useMemo(() => new THREE.Object3D(), []);
   const rightTarget = useMemo(() => new THREE.Object3D(), []);
 

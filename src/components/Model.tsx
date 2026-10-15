@@ -57,6 +57,55 @@ export default function Model({
 
   const contact = useMemo(() => scene.getObjectByName(CONTACT_NAME), [scene]);
 
+  // GalleryDoor : matériau lumineux indépendant des projecteurs
+  useEffect(() => {
+    const originals = new Map<THREE.Mesh, THREE.Material | THREE.Material[]>();
+
+    scene.traverse((object) => {
+      if (!(object instanceof THREE.Mesh) || !isGalleryDoor(object)) {
+        return;
+      }
+
+      originals.set(object, object.material);
+
+      const makeEmissive = (material: THREE.Material) => {
+        if (
+          material instanceof THREE.MeshStandardMaterial ||
+          material instanceof THREE.MeshPhysicalMaterial
+        ) {
+          const clone = material.clone();
+
+          clone.emissive.set("#5c5850");
+          clone.emissiveIntensity = 0.1;
+
+          return clone;
+        }
+
+        return material;
+      };
+
+      object.material = Array.isArray(object.material)
+        ? object.material.map(makeEmissive)
+        : makeEmissive(object.material);
+    });
+
+    return () => {
+      originals.forEach((original, mesh) => {
+        const current = Array.isArray(mesh.material)
+          ? mesh.material
+          : [mesh.material];
+
+        const previous = Array.isArray(original) ? original : [original];
+
+        current.forEach((material) => {
+          if (!previous.includes(material)) material.dispose();
+        });
+
+        mesh.material = original;
+      });
+    };
+  }, [scene]);
+
   const interactiveObjects = useMemo(() => {
     const objects = new Map<string, THREE.Object3D>();
 
@@ -118,21 +167,21 @@ export default function Model({
     setObjectHighlight(
       bookMeshes,
       hoveredObject === "book",
-      "#806054",
+      "#817874",
       originalColors.current,
     );
 
     setObjectHighlight(
       cardMeshes,
       hoveredObject === "card",
-      "#806054",
+      "#817874",
       originalColors.current,
     );
 
     setObjectHighlight(
       contactMeshes,
       hoveredObject === "contact",
-      "#806054",
+      "#817874",
       originalColors.current,
     );
 

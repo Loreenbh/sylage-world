@@ -148,52 +148,6 @@ const CameraController = forwardRef<
       false,
     );
   }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      const controls = controlsRef.current;
-
-      if (!controls) return;
-
-      const speed = 0.1;
-
-      switch (event.key) {
-        case "ArrowUp":
-          controls.forward(speed, true);
-          break;
-
-        case "ArrowDown":
-          controls.forward(-speed, true);
-          break;
-
-        case "ArrowLeft":
-          controls.truck(-speed, 0, true);
-          break;
-
-        case "ArrowRight":
-          controls.truck(speed, 0, true);
-          break;
-
-        case "q":
-        case "Q":
-          controls.elevate(speed, true);
-          break;
-
-        case "e":
-        case "E":
-          controls.elevate(-speed, true);
-          break;
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-
-  /*TEMPORAIRE DEBUG COORDONNEES CAMERAA SUPP + TARD APRES CADRAGE CAMERA*/
     return <CameraControls ref={controlsRef} enabled={false} />;
 });
 
